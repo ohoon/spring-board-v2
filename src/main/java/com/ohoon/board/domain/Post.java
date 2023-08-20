@@ -1,6 +1,8 @@
 package com.ohoon.board.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +21,18 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @NotNull
+    @Size(max=64)
     private String title;
 
+    @NotNull
     private String content;
 
+    @NotNull
+    @Size(max=20)
     private String author;
 
-    private Long view;
+    private long view;
 
     private boolean isRemoved;
 }

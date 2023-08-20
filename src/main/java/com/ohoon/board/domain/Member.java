@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,11 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @NotNull
     private String username;
 
     private String nickname;
 
+    @NotNull
     private String email;
 }

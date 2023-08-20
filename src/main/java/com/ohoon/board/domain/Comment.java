@@ -1,6 +1,8 @@
 package com.ohoon.board.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,12 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @NotNull
+    @Size(max=255)
     private String content;
 
+    @NotNull
+    @Size(max=20)
     private String author;
 
     private boolean isRemoved;
