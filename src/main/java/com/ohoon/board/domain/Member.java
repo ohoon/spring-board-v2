@@ -26,4 +26,14 @@ public class Member extends BaseEntity {
 
     @NotNull
     private String email;
+
+    private Member(String username, String nickname, String email) {
+        this.username = username;
+        this.nickname = nickname;
+        this.email = email;
+    }
+
+    public static Member create(String username, String nickname, String email) {
+        return new Member(username, nickname, email);
+    }
 }
