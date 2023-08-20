@@ -1,11 +1,14 @@
 package com.ohoon.board.domain;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-public class Comment {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -25,8 +28,4 @@ public class Comment {
     private String author;
 
     private boolean isRemoved;
-
-    private LocalDateTime createdDate;
-
-    private LocalDateTime lastModifiedDate;
 }
