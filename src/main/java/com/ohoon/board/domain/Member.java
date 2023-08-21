@@ -36,4 +36,12 @@ public class Member extends BaseEntity {
     public static Member create(String username, String nickname, String email) {
         return new Member(username, nickname, email);
     }
+
+    public String getName() {
+        if (nickname == null || nickname.isBlank()) {
+            return username;
+        }
+
+        return nickname;
+    }
 }

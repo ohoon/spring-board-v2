@@ -35,4 +35,28 @@ public class Post extends BaseEntity {
     private long view;
 
     private boolean isRemoved;
+
+    private Post(String title, String content, String author, Member member) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.member = member;
+    }
+
+    public static Post create(String title, String content, Member member) {
+        return new Post(title, content, member.getName(), member);
+    }
+
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public void edit(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void remove() {
+        this.isRemoved = true;
+    }
 }
