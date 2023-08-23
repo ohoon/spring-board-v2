@@ -34,4 +34,31 @@ public class Comment extends BaseEntity {
     private String author;
 
     private boolean isRemoved;
+
+    private Comment(String content, String author, Member member, Post post) {
+        this.content = content;
+        this.author = author;
+        this.member = member;
+        this.post = post;
+    }
+
+    public static Comment create(String content, Member member, Post post) {
+        return new Comment(content, member.getName(), member, post);
+    }
+
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public Long getPostId() {
+        return post.getId();
+    }
+
+    public void edit(String content) {
+        this.content = content;
+    }
+
+    public void remove() {
+        this.isRemoved = true;
+    }
 }
