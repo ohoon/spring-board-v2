@@ -20,6 +20,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     @NotNull
+    @Column(updatable = false, unique = true)
     private String username;
 
     private String nickname;
