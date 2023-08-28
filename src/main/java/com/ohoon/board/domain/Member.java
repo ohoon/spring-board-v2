@@ -1,13 +1,13 @@
 package com.ohoon.board.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,14 +28,26 @@ public class Member extends BaseEntity {
     @NotNull
     private String email;
 
+    @OneToMany(
+            mappedBy = "member",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private final List<Role> roles = new ArrayList<>();
+
     private Member(String username, String nickname, String email) {
         this.username = username;
         this.nickname = nickname;
         this.email = email;
     }
 
-    public static Member create(String username, String nickname, String email) {
-        return new Member(username, nickname, email);
+    public static Member create(String username, String nickname, String email, Role... roles) {
+        Member member = new Member(username, nickname, email);
+        for (Role role : roles) {
+            member.addRole(role);
+        }
+
+        return member;
     }
 
     public String getName() {
@@ -44,5 +56,10 @@ public class Member extends BaseEntity {
         }
 
         return nickname;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.assignMember(this);
     }
 }

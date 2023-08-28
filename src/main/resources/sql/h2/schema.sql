@@ -8,6 +8,28 @@ CREATE TABLE member (
     PRIMARY KEY (member_id)
 );
 
+CREATE TABLE auth_password (
+    auth_password_id   BIGINT,
+    member_id          BIGINT,
+    password           VARCHAR(255) NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (auth_password_id),
+    FOREIGN KEY (member_id) REFERENCES member (member_id)
+);
+
+CREATE TYPE role_type AS ENUM('MEMBER', 'ADMIN');
+
+CREATE TABLE role (
+    role_id            BIGINT,
+    member_id          BIGINT,
+    type               ROLE_TYPE NOT NULL,
+    created_date       DATETIME  NOT NULL,
+    last_modified_date DATETIME  NOT NULL,
+    PRIMARY KEY (role_id),
+    FOREIGN KEY (member_id) REFERENCES member (member_id)
+);
+
 CREATE TABLE post (
     post_id            BIGINT,
     member_id          BIGINT,
