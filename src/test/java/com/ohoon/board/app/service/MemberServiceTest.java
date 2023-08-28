@@ -28,7 +28,7 @@ class MemberServiceTest {
     @DisplayName("회원가입")
     @Test
     void join1() {
-        MemberJoinDto joinDto = new MemberJoinDto("usernameA", "nicknameA", "email@example.com");
+        MemberJoinDto joinDto = new MemberJoinDto("usernameA", "1234", "nicknameA", "email@example.com");
         Long memberId = service.join(joinDto);
         MemberProfileDto findMemberProfile = service.findById(memberId);
         assertThat(findMemberProfile.getUsername()).isEqualTo("usernameA");
@@ -38,7 +38,7 @@ class MemberServiceTest {
     @DisplayName("회원가입 (닉네임 누락)")
     @Test
     void join2() {
-        MemberJoinDto joinDto = new MemberJoinDto("usernameA", null, "email@example.com");
+        MemberJoinDto joinDto = new MemberJoinDto("usernameA", "1234", null, "email@example.com");
         Long memberId = service.join(joinDto);
         MemberProfileDto findMemberProfile = service.findById(memberId);
         assertThat(findMemberProfile.getUsername()).isEqualTo("usernameA");

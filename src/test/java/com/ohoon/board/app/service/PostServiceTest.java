@@ -33,7 +33,7 @@ class PostServiceTest {
     @BeforeEach
     void initMember() {
         Long memberId = memberService.join(
-                new MemberJoinDto("testUser", "ohoon", "0hoon5661@gmail.com"));
+                new MemberJoinDto("testUser", "1234", "ohoon", "0hoon5661@gmail.com"));
         memberProfileDto = memberService.findById(memberId);
     }
 
