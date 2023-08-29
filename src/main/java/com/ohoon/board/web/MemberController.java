@@ -27,7 +27,7 @@ public class MemberController {
 
     @PostMapping("/join")
     public String join(
-            @Valid @ModelAttribute MemberJoinDto joinDto,
+            @Valid @ModelAttribute(name = "joinDto") MemberJoinDto joinDto,
             BindingResult result
     ) {
         if (result.hasErrors()) {
