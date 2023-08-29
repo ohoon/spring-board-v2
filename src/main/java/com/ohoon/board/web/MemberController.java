@@ -1,6 +1,8 @@
 package com.ohoon.board.web;
 
+import com.ohoon.board.app.dto.CurrentMemberDto;
 import com.ohoon.board.app.dto.MemberJoinDto;
+import com.ohoon.board.app.security.CurrentMember;
 import com.ohoon.board.app.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,10 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/join")
-    public String joinForm(Model model) {
+    public String joinForm(
+            @CurrentMember CurrentMemberDto currentMember,
+            Model model) {
+        model.addAttribute("currentMember", currentMember);
         model.addAttribute("joinDto", new MemberJoinDto());
         return "members/joinForm";
     }
