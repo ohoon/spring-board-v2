@@ -1,5 +1,6 @@
 package com.ohoon.board.app.security;
 
+import com.ohoon.board.app.dto.CurrentMemberDto;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
 import lombok.AccessLevel;
@@ -56,5 +57,9 @@ public class MemberDetails implements UserDetails {
 
     public static MemberDetails create(Member member, AuthPassword authPassword) {
         return new MemberDetails(member, authPassword);
+    }
+
+    public CurrentMemberDto getCurrentMember() {
+        return CurrentMemberDto.create(member);
     }
 }
