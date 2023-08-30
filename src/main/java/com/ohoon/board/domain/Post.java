@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +39,12 @@ public class Post extends BaseEntity {
 
     private boolean isRemoved;
 
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.REMOVE
+    )
+    private final List<Comment> comments = new ArrayList<>();
+
     private Post(String title, String content, String author, Member member) {
         this.title = title;
         this.content = content;
@@ -58,5 +67,9 @@ public class Post extends BaseEntity {
 
     public void remove() {
         this.isRemoved = true;
+    }
+
+    public int getTotalComments() {
+        return this.comments.size();
     }
 }

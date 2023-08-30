@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/header :: header}"></head>
+<style>
+  a {
+    color: #111;
+    text-decoration-line: none;
+  }
+  a:hover {
+    color: #111;
+    text-decoration-line: underline;
+  }
+  table {
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+</style>
+<body>
+  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+  <div class="container">
+    <div class="py-3 text-center">
+      <h3>게시판</h3>
+    </div>
+    <table class="table table-hover text-center">
+      <thead>
+      <tr>
+        <th scope="col" style="width: 7%">번호</th>
+        <th scope="col" style="width: 62%">제목</th>
+        <th scope="col" style="width: 13%">작성자</th>
+        <th scope="col" style="width: 10%">작성일</th>
+        <th scope="col" style="width: 8%">조회</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="listDto : ${listDtos}">
+        <td>
+          <small th:text="${listDto.postId}"></small>
+        </td>
+        <td style="text-align: left">
+          <a th:href="|@{/post/{id}(id=${listDto.postId})}|">
+            <span th:text="${listDto.title}"></span>
+          </a>
+          <small th:if="${listDto.totalComment > 0}"
+                 th:text="' [' + ${listDto.totalComment} + '] '"
+                 class="text-muted"></small>
+        </td>
+        <td th:text="${listDto.author}"></td>
+        <td>
+          <small th:if="${listDto.createdDate.isAfter(listDto.createdDate.now().minusDays(1))}"
+                 th:text="${#temporals.format(listDto.createdDate, 'HH:mm')}"></small>
+          <small th:unless="${listDto.createdDate.isAfter(listDto.createdDate.now().minusDays(1))}"
+                 th:if="${listDto.createdDate.year == listDto.createdDate.now().year}"
+                 th:text="${#temporals.format(listDto.createdDate, 'MM.dd')}"></small>
+          <small th:unless="${listDto.createdDate.isAfter(listDto.createdDate.now().minusDays(1)) ||
+           listDto.createdDate.year == listDto.createdDate.now().year}"
+                 th:text="${#temporals.format(listDto.createdDate, 'yyyy/MM/dd')}"></small>
+        </td>
+        <td><small th:text="${listDto.view}"></small></td>
+      </tr>
+      <tr th:if="${listDtos.isEmpty()}">
+        <td colspan="5" class="text-center">게시글이 없습니다.</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="col-1">
+        <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
+      </div>
+      <div class="col-5 m-auto">
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item" th:unless="${pageNumber < 10}">
+              <a class="page-link" th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
+                <span>&laquo;</span>
+              </a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(pageNumber - pageNumber % 10 + 1, T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, totalPages))}"
+                th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
+              <a class="page-link" th:href="@{/post(page=${page})}" th:text="${page}"></a>
+            </li>
+            <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
+              <a class="page-link" th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
+                <span>&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-1">
+        <button class="btn btn-dark float-right" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
+      </div>
+    </div>
+    <div th:replace="~{/fragments/footer :: footer}"></div>
+  </div>
+</body>
+</html>

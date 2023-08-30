@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.ohoon.board.domain.QMember.*;
 import static com.ohoon.board.domain.QPost.*;
 
 @Repository
@@ -23,6 +24,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     public Page<Post> list(Pageable pageable) {
         List<Post> content = queryFactory
                 .selectFrom(post)
+                .leftJoin(post.member, member).fetchJoin()
                 .where(post.isRemoved.isFalse())
                 .orderBy(post.id.desc())
                 .offset(pageable.getOffset())
