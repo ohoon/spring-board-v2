@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/header :: header}"></head>
+<style>
+  .fieldError {
+    border-color: #bd2130;
+  }
+  .errorMsg {
+    color: #bd2130;
+  }
+</style>
+<body>
+  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+  <div class="container">
+    <div class="py-3 text-center">
+      <h3>게시물 작성</h3>
+    </div>
+    <form action th:object="${writeDto}" method="post">
+      <div class="row form-group">
+        <div class="col">
+          <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요."
+                 th:class="${#fields.hasErrors('title')} ? 'form-control fieldError' : 'form-control'">
+          <p class="errorMsg" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">제목을 입력해주세요.</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="summernote" th:field="*{content}" class="form-control"
+                  th:class="${#fields.hasErrors('content')} ? 'form-control fieldError' : 'form-control'"></textarea>
+        <p class="errorMsg" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">내용을 입력해주세요.</p>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="float-end">
+            <button type="submit" class="btn btn-primary">작성</button>
+            <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/post}'|">취소</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div th:replace="~{/fragments/footer :: footer}"></div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#summernote').summernote({
+        height: 500,
+        focus: false,
+        lang: "ko-KR"
+      });
+    });
+  </script>
+</body>
+</html>
