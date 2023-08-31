@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/header :: header}"></head>
+<body>
+  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+  <div class="container">
+    <div class="py-3 text-center">
+      <h3>게시판</h3>
+    </div>
+    <hr />
+    <div>
+      <p><strong th:text="${readDto.title}"></strong></p>
+    </div>
+    <div>
+      <div style="display: inline-block">
+        <small th:text="${readDto.author}"></small>
+      </div>
+      <div style="display: inline-block; float:right">
+        <div style="display: inline-block; padding-inline-end: 0.5rem">
+          <small th:text="|조회수 ${readDto.view}|"></small>
+        </div>
+        <div style="display: inline-block; padding-inline-start: 0.5rem">
+          <small th:text="|작성일 ${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}|"></small>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div th:utext="${readDto.content}"></div>
+    <div class="row my-3">
+      <div class="col">
+        <strong>전체 댓글 <span class="text-danger" th:text="${readDto.commentListDtos.size()}"></span>개</strong>
+      </div>
+    </div>
+    <hr />
+    <div class="row" th:each="commentListDto : ${readDto.commentListDtos}" style="padding-inline: 0.5rem">
+      <div class="col-1">
+        <small><strong th:text="${commentListDto.author}"></strong></small>
+      </div>
+      <div class="col-9" style="cursor: pointer">
+        <span th:text="${commentListDto.content}"></span>
+      </div>
+      <div class="col-2">
+        <div class="float-end">
+          <form th:if="${commentListDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                th:action="|@{/post/{postId}/comment/{commentId}(postId=${readDto.postId}, commentId=${commentListDto.commentId})}|"
+                method="post" style="display: inline">
+            <input type="hidden" name="_method" value="delete"/>
+            <button class="btn-close" style="width: 1px;" type="submit"></button>
+          </form>
+          <small class="text-muted ml-2" th:text="${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
+        </div>
+      </div>
+      <hr/>
+    </div>
+    <div class="row input-group mb-3">
+      <div class="col">
+        <form th:action="|@{/post/{id}/comment(id=${readDto.postId})}|" method="post">
+          <textarea class="form-control" style="resize: none" id="comment_input"></textarea>
+          <button class="btn btn-outline-secondary float-end" id="comment_write" type="submit">작성</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="float-start">
+          <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
+        </div>
+        <div class="float-end">
+          <form th:action="|@{/post/{id}(id=${readDto.postId})}|" method="post"
+                th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                style="display: inline">
+            <input type="hidden" name="_method" value="delete"/>
+            <button class="btn btn-danger" type="submit">글삭제</button>
+          </form>
+          <button class="btn btn-info" type="button"
+                  th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                  th:onclick="|location.href='@{/post/{id}/edit(id=${readDto.postId})}'|">글수정</button>
+          <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{/fragments/footer :: footer}"></div>
+  </div>
+  <script th:inline="javascript">
+    $(document).on('keypress', '#comment_input', e => {
+      if (e.keyCode === 13 && !e.shiftKey) {
+        $('#comment_write').click();
+        return false;
+      }
+    });
+  </script>
+</body>
+</html>

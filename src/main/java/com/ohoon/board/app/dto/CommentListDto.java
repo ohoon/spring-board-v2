@@ -21,12 +21,15 @@ public class CommentListDto {
 
     private String author;
 
+    private boolean isRemoved;
+
     public static CommentListDto fromEntity(Comment comment) {
         return new CommentListDto(
                 comment.getId(),
                 comment.getMemberId(),
                 comment.getPostId(),
                 comment.getContent(),
-                comment.getAuthor());
+                comment.getAuthor(),
+                comment.isRemoved());
     }
 }

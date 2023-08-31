@@ -2,6 +2,7 @@ package com.ohoon.board.web;
 
 import com.ohoon.board.app.dto.CurrentMemberDto;
 import com.ohoon.board.app.dto.PostListDto;
+import com.ohoon.board.app.dto.PostReadDto;
 import com.ohoon.board.app.security.CurrentMember;
 import com.ohoon.board.app.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -29,5 +31,16 @@ public class PostController {
         model.addAttribute("pageNumber", postListDtoPages.getPageable().getPageNumber());
         model.addAttribute("totalPages", postListDtoPages.getTotalPages());
         return "posts/list";
+    }
+
+    @GetMapping("/{id}")
+    public String read(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            Model model) {
+        PostReadDto postReadDto = postService.read(postId);
+        model.addAttribute("currentMember", currentMember);
+        model.addAttribute("readDto", postReadDto);
+        return "posts/read";
     }
 }
