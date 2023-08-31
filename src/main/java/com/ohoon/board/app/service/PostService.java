@@ -33,9 +33,11 @@ public class PostService {
         return savedPost.getId();
     }
 
+    @Transactional
     public PostReadDto read(Long postId) {
-        Post findPost = postRepository.findById(postId)
+        Post findPost = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
+        findPost.increaseView();
         return PostReadDto.fromEntity(findPost);
     }
 

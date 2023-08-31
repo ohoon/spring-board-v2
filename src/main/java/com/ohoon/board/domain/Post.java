@@ -72,4 +72,8 @@ public class Post extends BaseEntity {
     public int getTotalComments() {
         return this.comments.size();
     }
+
+    public void increaseView() {
+        this.view++;
+    }
 }
