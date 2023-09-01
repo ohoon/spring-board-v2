@@ -47,33 +47,15 @@ public class InitController {
                             "test1234",
                             null,
                             "test@example.org"));
-            Long post1 = postService.write(member1, new PostWriteDto(
-                    "안녕하세요",
-                    "반갑습니다"));
-            Long post2 = postService.write(member1, new PostWriteDto(
-                    "글쓰기 테스트",
-                    "12345"));
-            Long post3 = postService.write(member2, new PostWriteDto(
-                    "스프링 부트에서 만들어진 게시판 프로젝트입니다",
-                    "abcedef"));
-            Long post4 = postService.write(member1, new PostWriteDto(
-                    "오늘 날짜는 2023년 8월 30일",
-                    "밖에는 비가 내리네요"));
-            Long post5 = postService.write(member2, new PostWriteDto(
-                    "abcdefghijklmnopqrstuvwxyz",
-                    "**"));
-            Long comment1 = commentService.write(member1, post1,
-                    new CommentWriteDto("test1"));
-            Long comment2 = commentService.write(member2, post1,
-                    new CommentWriteDto("te33s12t2"));
-            Long comment3 = commentService.write(member1, post1,
-                    new CommentWriteDto("te1554st43"));
-            Long comment4 = commentService.write(member2, post3,
-                    new CommentWriteDto("te33st4"));
-            Long comment5 = commentService.write(member1, post4,
-                    new CommentWriteDto("te56st5"));
-            Long comment6 = commentService.write(member2, post4,
-                    new CommentWriteDto("t22e11st6"));
+            for (int i = 1; i <= 100; i++) {
+                Long post = postService.write(member1, new PostWriteDto(
+                        "글 작성 테스트 " + i,
+                        "테스트 번호: " + i));
+                for (int j = 1; j <= 50; j++) {
+                    commentService.write(member2, post,
+                            new CommentWriteDto("댓글 테스트 " + j));
+                }
+            }
         }
     }
 }

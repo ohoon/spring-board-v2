@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,12 +26,13 @@ public class PostController {
     @GetMapping("")
     public String list(
             @CurrentMember CurrentMemberDto currentMember,
+            @PageableDefault(30) Pageable pageable,
             Model model
     ) {
-        Page<PostListDto> postListDtoPages = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> postListDtoPages = postService.list(pageable);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("listDtos", postListDtoPages.getContent());
-        model.addAttribute("pageNumber", postListDtoPages.getPageable().getPageNumber());
+        model.addAttribute("pageNumber", postListDtoPages.getNumber());
         model.addAttribute("totalPages", postListDtoPages.getTotalPages());
         return "posts/list";
     }

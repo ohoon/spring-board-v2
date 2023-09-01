@@ -74,7 +74,11 @@
                 <span>&laquo;</span>
               </a>
             </li>
-            <li th:each="page : ${#numbers.sequence(pageNumber - pageNumber % 10 + 1, T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, totalPages))}"
+            <li th:each="page :
+             ${#numbers.sequence(
+                pageNumber - pageNumber % 10 + 1,
+                T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, T(java.lang.Math).max(totalPages, 1))
+             )}"
                 th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
               <a class="page-link" th:href="@{/post(page=${page})}" th:text="${page}"></a>
             </li>
