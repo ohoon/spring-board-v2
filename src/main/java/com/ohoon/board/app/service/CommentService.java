@@ -1,6 +1,5 @@
 package com.ohoon.board.app.service;
 
-import com.ohoon.board.app.dto.CommentEditDto;
 import com.ohoon.board.app.dto.CommentListDto;
 import com.ohoon.board.app.dto.CommentWriteDto;
 import com.ohoon.board.app.exception.CommentNotFoundException;
@@ -39,16 +38,9 @@ public class CommentService {
         return savedComment.getId();
     }
 
-    public Page<CommentListDto> list(Pageable pageable) {
-        return commentRepository.list(pageable)
+    public Page<CommentListDto> listByPostId(Long postId, Pageable pageable) {
+        return commentRepository.listByPostId(postId, pageable)
                 .map(CommentListDto::fromEntity);
-    }
-
-    @Transactional
-    public void edit(Long commentId, CommentEditDto commentEditDto) {
-        Comment findComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다."));
-        findComment.edit(commentEditDto.getContent());
     }
 
     @Transactional
@@ -56,5 +48,11 @@ public class CommentService {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다."));
         findComment.remove();
+    }
+
+    public boolean isAuthor(Long commentId, Long memberId) {
+        Comment findComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다."));
+        return findComment.getMemberId().equals(memberId);
     }
 }

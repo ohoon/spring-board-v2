@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,8 +20,6 @@ public class PostReadDto {
 
     private String content;
 
-    private List<CommentListDto> commentListDtos;
-
     private String author;
 
     private Long view;
@@ -35,9 +32,6 @@ public class PostReadDto {
                 post.getMemberId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getComments().stream()
-                        .map(CommentListDto::fromEntity)
-                        .toList(),
                 post.getAuthor(),
                 post.getView(),
                 post.getCreatedDate());

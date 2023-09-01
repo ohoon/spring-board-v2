@@ -2,11 +2,11 @@ package com.ohoon.board.web;
 
 import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.security.CurrentMember;
+import com.ohoon.board.app.service.CommentService;
 import com.ohoon.board.app.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PostController {
 
     private final PostService postService;
+
+    private final CommentService commentService;
 
     @GetMapping("")
     public String list(
@@ -65,11 +67,18 @@ public class PostController {
     public String read(
             @CurrentMember CurrentMemberDto currentMember,
             @PathVariable("id") Long postId,
+            @PageableDefault(30) Pageable commentPageable,
             Model model
     ) {
         PostReadDto postReadDto = postService.read(postId);
+        Page<CommentListDto> commentListDtoPages = commentService.listByPostId(postId, commentPageable);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("readDto", postReadDto);
+        model.addAttribute("commentWriteDto", new CommentWriteDto());
+        model.addAttribute("commentListDtos", commentListDtoPages.getContent());
+        model.addAttribute("commentPageNumber", commentListDtoPages.getNumber());
+        model.addAttribute("commentTotalPages", commentListDtoPages.getTotalPages());
+        model.addAttribute("commentTotalElements", commentListDtoPages.getTotalElements());
         return "posts/read";
     }
 
@@ -112,5 +121,35 @@ public class PostController {
     ) {
         postService.remove(postId);
         return "redirect:/post";
+    }
+
+    @PostMapping("/{id}/comment")
+    public String writeComment(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            @Valid @ModelAttribute("writeDto") CommentWriteDto writeDto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addAttribute("id", postId);
+        if (result.hasErrors()) {
+            return "redirect:/post/{id}";
+        }
+
+        commentService.write(currentMember.getMemberId(), postId, writeDto);
+        return "redirect:/post/{id}";
+    }
+
+    @PreAuthorize("@commentService.isAuthor(#commentId, #currentMember.memberId)")
+    @PostMapping("/{id}/comment/{cid}/remove")
+    public String removeComment(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            @PathVariable("cid") Long commentId,
+            RedirectAttributes redirectAttributes
+    ) {
+        commentService.remove(commentId);
+        redirectAttributes.addAttribute("id", postId);
+        return "redirect:/post/{id}";
     }
 }

@@ -48,14 +48,14 @@ class CommentServiceTest {
     @DisplayName("댓글 작성")
     @Test
     void write() {
-        Page<CommentListDto> before = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> before = commentService.listByPostId(postReadDto.getPostId(), PageRequest.of(0, 30));
 
         commentService.write(
                 memberProfileDto.getMemberId(),
                 postReadDto.getPostId(),
                 new CommentWriteDto("first comment"));
 
-        Page<CommentListDto> after = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> after = commentService.listByPostId(postReadDto.getPostId(), PageRequest.of(0, 30));
 
         assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(1);
     }
@@ -68,11 +68,11 @@ class CommentServiceTest {
                 postReadDto.getPostId(),
                 new CommentWriteDto("it is spam message"));
 
-        Page<CommentListDto> before = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> before = commentService.listByPostId(postReadDto.getPostId(), PageRequest.of(0, 30));
 
         commentService.remove(commentId);
 
-        Page<CommentListDto> after = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> after = commentService.listByPostId(postReadDto.getPostId(), PageRequest.of(0, 30));
 
         assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(-1);
     }

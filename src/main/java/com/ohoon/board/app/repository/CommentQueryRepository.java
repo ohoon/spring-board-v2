@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentQueryRepository {
 
-    Page<Comment> list(Pageable pageable);
+    Page<Comment> listByPostId(Long postId, Pageable pageable);
 }

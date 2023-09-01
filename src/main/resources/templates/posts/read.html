@@ -28,11 +28,11 @@
     <div th:utext="${readDto.content}"></div>
     <div class="row my-3">
       <div class="col">
-        <strong>전체 댓글 <span class="text-danger" th:text="${readDto.commentListDtos.size()}"></span>개</strong>
+        <strong>전체 댓글 <span class="text-danger" th:text="${commentTotalElements}"></span>개</strong>
       </div>
     </div>
     <hr />
-    <div class="row" th:each="commentListDto : ${readDto.commentListDtos}" style="padding-inline: 0.5rem">
+    <div class="row" th:each="commentListDto : ${commentListDtos}" style="padding-inline: 0.5rem">
       <div class="col-1">
         <small><strong th:text="${commentListDto.author}"></strong></small>
       </div>
@@ -42,9 +42,8 @@
       <div class="col-2">
         <div class="float-end">
           <form th:if="${commentListDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
-                th:action="|@{/post/{postId}/comment/{commentId}(postId=${readDto.postId}, commentId=${commentListDto.commentId})}|"
+                th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${commentListDto.commentId})}|"
                 method="post" style="display: inline">
-            <input type="hidden" name="_method" value="delete"/>
             <button class="btn-close" style="width: 1px;" type="submit"></button>
           </form>
           <small class="text-muted ml-2" th:text="${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
@@ -52,11 +51,36 @@
       </div>
       <hr/>
     </div>
+    <div class="row">
+      <div class="col">
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item" th:unless="${commentPageNumber < 10}">
+              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10})}">
+                <span>&laquo;</span>
+              </a>
+            </li>
+            <li th:each="page :
+             ${#numbers.sequence(
+                commentPageNumber - commentPageNumber % 10 + 1,
+                T(java.lang.Math).min(commentPageNumber - commentPageNumber % 10 + 10, T(java.lang.Math).max(commentTotalPages, 1))
+              )}" th:class="${page == commentPageNumber + 1 ? 'page-item active' : 'page-item'}">
+              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${page})}" th:text="${page}"></a>
+            </li>
+            <li class="page-item" th:if="${commentPageNumber < (commentTotalPages - 1) - (commentTotalPages - 1) % 10}">
+              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10 + 11})}">
+                <span>&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
     <div class="row input-group mb-3">
       <div class="col">
-        <form th:action="|@{/post/{id}/comment(id=${readDto.postId})}|" method="post">
-          <textarea class="form-control" style="resize: none" id="comment_input"></textarea>
-          <button class="btn btn-outline-secondary float-end" id="comment_write" type="submit">작성</button>
+        <form th:action="|@{/post/{id}/comment(id=${readDto.postId})}|" th:object="${commentWriteDto}" method="post">
+          <textarea id="comment_input" th:field="*{content}" class="form-control" style="resize: none" required></textarea>
+          <button id="comment_write" class="btn btn-outline-secondary float-end" type="submit">작성</button>
         </form>
       </div>
     </div>

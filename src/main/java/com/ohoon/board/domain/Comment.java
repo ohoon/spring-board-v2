@@ -54,10 +54,6 @@ public class Comment extends BaseEntity {
         return post.getId();
     }
 
-    public void edit(String content) {
-        this.content = content;
-    }
-
     public void remove() {
         this.isRemoved = true;
     }
