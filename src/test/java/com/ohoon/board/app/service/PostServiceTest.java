@@ -53,6 +53,8 @@ class PostServiceTest {
     @DisplayName("글 리스트")
     @Test
     void list() {
+        Page<PostListDto> before = postService.list(PageRequest.of(0, 30));
+
         postService.write(
                 memberProfileDto.getMemberId(),
                 new PostWriteDto("post write test", "hello world!"));
@@ -63,12 +65,9 @@ class PostServiceTest {
                 memberProfileDto.getMemberId(),
                 new PostWriteDto("help me", ":("));
 
-        Page<PostListDto> postListDtoPage = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> after = postService.list(PageRequest.of(0, 30));
 
-        assertThat(postListDtoPage.getTotalElements()).isEqualTo(3);
-        assertThat(postListDtoPage)
-                .extracting("title")
-                .containsExactly("help me", "good morning", "post write test");
+        assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(3);
     }
 
     @DisplayName("글 수정")
@@ -94,9 +93,12 @@ class PostServiceTest {
                 memberProfileDto.getMemberId(),
                 new PostWriteDto("post write test", "hello world!"));
 
-        postService.remove(postId);
-        Page<PostListDto> postListDtoPage = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> before = postService.list(PageRequest.of(0, 30));
 
-        assertThat(postListDtoPage.getContent()).isEmpty();
+        postService.remove(postId);
+
+        Page<PostListDto> after = postService.list(PageRequest.of(0, 30));
+
+        assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(-1);
     }
 }

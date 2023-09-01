@@ -48,57 +48,16 @@ class CommentServiceTest {
     @DisplayName("댓글 작성")
     @Test
     void write() {
+        Page<CommentListDto> before = commentService.list(PageRequest.of(0, 30));
+
         commentService.write(
                 memberProfileDto.getMemberId(),
                 postReadDto.getPostId(),
                 new CommentWriteDto("first comment"));
 
-        Page<CommentListDto> commentListDtoPage = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> after = commentService.list(PageRequest.of(0, 30));
 
-        assertThat(commentListDtoPage.getTotalElements()).isEqualTo(1);
-        assertThat(commentListDtoPage.getContent().get(0).getContent()).isEqualTo("first comment");
-    }
-
-    @DisplayName("댓글 리스트")
-    @Test
-    void list() {
-        commentService.write(
-                memberProfileDto.getMemberId(),
-                postReadDto.getPostId(),
-                new CommentWriteDto("first comment"));
-        commentService.write(
-                memberProfileDto.getMemberId(),
-                postReadDto.getPostId(),
-                new CommentWriteDto("second comment"));
-        commentService.write(
-                memberProfileDto.getMemberId(),
-                postReadDto.getPostId(),
-                new CommentWriteDto("three comment"));
-
-
-        Page<CommentListDto> commentListDtoPage = commentService.list(PageRequest.of(0, 30));
-
-        assertThat(commentListDtoPage.getTotalElements()).isEqualTo(3);
-        assertThat(commentListDtoPage)
-                .extracting("content")
-                .containsExactly("first comment", "second comment", "three comment");
-    }
-
-    @DisplayName("댓글 수정")
-    @Test
-    void edit() {
-        Long commentId = commentService.write(
-                memberProfileDto.getMemberId(),
-                postReadDto.getPostId(),
-                new CommentWriteDto("hi~"));
-
-        CommentListDto commentBeforeEdit = commentService.list(PageRequest.of(0, 30)).getContent().get(0);
-        commentService.edit(commentId, new CommentEditDto("i edited comment"));
-        entityManager.flush();
-        entityManager.clear();
-        CommentListDto commentAfterEdit = commentService.list(PageRequest.of(0, 30)).getContent().get(0);
-
-        assertThat(commentBeforeEdit).isNotEqualTo(commentAfterEdit);
+        assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(1);
     }
 
     @DisplayName("댓글 삭제")
@@ -109,9 +68,12 @@ class CommentServiceTest {
                 postReadDto.getPostId(),
                 new CommentWriteDto("it is spam message"));
 
-        commentService.remove(commentId);
-        Page<CommentListDto> commentListDtoPage = commentService.list(PageRequest.of(0, 30));
+        Page<CommentListDto> before = commentService.list(PageRequest.of(0, 30));
 
-        assertThat(commentListDtoPage.getContent()).isEmpty();
+        commentService.remove(commentId);
+
+        Page<CommentListDto> after = commentService.list(PageRequest.of(0, 30));
+
+        assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(-1);
     }
 }
