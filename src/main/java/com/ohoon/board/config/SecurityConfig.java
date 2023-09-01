@@ -3,6 +3,7 @@ package com.ohoon.board.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,8 +30,9 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/member/join").permitAll()
-                        .requestMatchers("/post/write", "/post/*/edit", "/post/*/remove").hasRole("MEMBER")
-                        .requestMatchers("/post", "/post/*").permitAll()
+                        .requestMatchers("/post/write", "/post/*/*/**").hasRole("MEMBER")
+                        .requestMatchers(HttpMethod.POST, "/post/*").hasRole("MEMBER")
+                        .requestMatchers(HttpMethod.GET, "/post", "/post/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
