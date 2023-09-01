@@ -1,9 +1,6 @@
 package com.ohoon.board.web;
 
-import com.ohoon.board.app.dto.CurrentMemberDto;
-import com.ohoon.board.app.dto.PostListDto;
-import com.ohoon.board.app.dto.PostReadDto;
-import com.ohoon.board.app.dto.PostWriteDto;
+import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.security.CurrentMember;
 import com.ohoon.board.app.service.PostService;
 import jakarta.validation.Valid;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/post")
@@ -36,7 +34,6 @@ public class PostController {
         return "posts/list";
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/write")
     public String writeForm(
             @CurrentMember CurrentMemberDto currentMember,
@@ -47,7 +44,6 @@ public class PostController {
         return "posts/writeForm";
     }
 
-    @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("/write")
     public String write(
             @CurrentMember CurrentMemberDto currentMember,
@@ -72,5 +68,46 @@ public class PostController {
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("readDto", postReadDto);
         return "posts/read";
+    }
+
+    @PreAuthorize("@postService.isAuthor(#postId, #currentMember.memberId)")
+    @GetMapping("/{id}/edit")
+    public String editForm(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            Model model
+    ) {
+        PostReadDto postReadDto = postService.read(postId);
+        model.addAttribute("currentMember", currentMember);
+        model.addAttribute("editDto", PostEditDto.fromReadDto(postReadDto));
+        return "posts/editForm";
+    }
+
+    @PreAuthorize("@postService.isAuthor(#postId, #currentMember.memberId)")
+    @PostMapping("/{id}/edit")
+    public String edit(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            @Valid @ModelAttribute("editDto") PostEditDto editDto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (result.hasErrors()) {
+            return "posts/editForm";
+        }
+
+        postService.edit(postId, editDto);
+        redirectAttributes.addAttribute("id", postId);
+        return "redirect:/post/{id}";
+    }
+
+    @PreAuthorize("@postService.isAuthor(#postId, #currentMember.memberId)")
+    @PostMapping("/{id}/remove")
+    public String remove(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId
+    ) {
+        postService.remove(postId);
+        return "redirect:/post";
     }
 }

@@ -3,26 +3,24 @@ package com.ohoon.board.app.security;
 import com.ohoon.board.app.dto.CurrentMemberDto;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberDetails implements UserDetails {
 
     private final Member member;
 
     private final AuthPassword authPassword;
 
+    private final Collection<GrantedAuthority> authorities = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collectors = new ArrayList<>();
-        member.getRoles().forEach(role -> collectors.add(role::getFullType));
-        return collectors;
+        return this.authorities;
     }
 
     @Override
@@ -55,11 +53,26 @@ public class MemberDetails implements UserDetails {
         return true;
     }
 
+    private MemberDetails(Member member, AuthPassword authPassword) {
+        this.member = member;
+        this.authPassword = authPassword;
+    }
+
     public static MemberDetails create(Member member, AuthPassword authPassword) {
-        return new MemberDetails(member, authPassword);
+        MemberDetails memberDetails = new MemberDetails(member, authPassword);
+        member.getRoles().forEach(role -> memberDetails.authorities.add(role::getFullType));
+        return memberDetails;
     }
 
     public CurrentMemberDto getCurrentMember() {
         return CurrentMemberDto.create(member);
+    }
+
+    public boolean isMember() {
+        return this.authorities.contains(new SimpleGrantedAuthority("ROLE_MEMBER"));
+    }
+
+    public boolean isAdmin() {
+        return this.authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 }

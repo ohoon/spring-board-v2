@@ -66,10 +66,9 @@
           <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
         </div>
         <div class="float-end">
-          <form th:action="|@{/post/{id}(id=${readDto.postId})}|" method="post"
+          <form th:action="|@{/post/{id}/remove(id=${readDto.postId})}|" method="post"
                 th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
                 style="display: inline">
-            <input type="hidden" name="_method" value="delete"/>
             <button class="btn btn-danger" type="submit">글삭제</button>
           </form>
           <button class="btn btn-info" type="button"

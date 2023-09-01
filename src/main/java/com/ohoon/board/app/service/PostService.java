@@ -48,15 +48,21 @@ public class PostService {
 
     @Transactional
     public void edit(Long postId, PostEditDto postEditDto) {
-        Post findPost = postRepository.findById(postId)
+        Post findPost = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
         findPost.edit(postEditDto.getTitle(), postEditDto.getContent());
     }
 
     @Transactional
     public void remove(Long postId) {
-        Post findPost = postRepository.findById(postId)
+        Post findPost = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
         findPost.remove();
+    }
+
+    public boolean isAuthor(Long postId, Long memberId) {
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
+        return findPost.getMemberId().equals(memberId);
     }
 }

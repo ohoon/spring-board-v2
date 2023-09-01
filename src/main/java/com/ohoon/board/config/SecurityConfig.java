@@ -3,6 +3,7 @@ package com.ohoon.board.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -11,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -27,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/member/join").permitAll()
-                        .requestMatchers("/post/write").authenticated()
+                        .requestMatchers("/post/write", "/post/*/edit", "/post/*/remove").hasRole("MEMBER")
                         .requestMatchers("/post", "/post/*").permitAll()
                         .anyRequest().authenticated()
                 )
