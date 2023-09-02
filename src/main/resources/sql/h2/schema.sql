@@ -48,6 +48,7 @@ CREATE TABLE comment (
     comment_id         BIGINT,
     member_id          BIGINT,
     post_id            BIGINT,
+    parent_id          BIGINT,
     content            VARCHAR(255) NOT NULL,
     author             VARCHAR(20)  NOT NULL,
     is_removed         BOOLEAN      NOT NULL,
@@ -55,5 +56,6 @@ CREATE TABLE comment (
     last_modified_date DATETIME     NOT NULL,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id),
-    FOREIGN KEY (post_id) REFERENCES post (post_id)
+    FOREIGN KEY (post_id) REFERENCES post (post_id),
+    FOREIGN KEY (parent_id) REFERENCES comment (comment_id)
 );

@@ -71,14 +71,15 @@ public class PostController {
             Model model
     ) {
         PostReadDto postReadDto = postService.read(postId);
-        Page<CommentListDto> commentListDtoPages = commentService.listByPostId(postId, commentPageable);
+        Page<CommentDto> commentDtoPages = commentService.listByPostId(postId, commentPageable);
+        long totalComments = commentService.count(postId);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("readDto", postReadDto);
         model.addAttribute("commentWriteDto", new CommentWriteDto());
-        model.addAttribute("commentListDtos", commentListDtoPages.getContent());
-        model.addAttribute("commentPageNumber", commentListDtoPages.getNumber());
-        model.addAttribute("commentTotalPages", commentListDtoPages.getTotalPages());
-        model.addAttribute("commentTotalElements", commentListDtoPages.getTotalElements());
+        model.addAttribute("commentDtos", commentDtoPages.getContent());
+        model.addAttribute("commentPageNumber", commentDtoPages.getNumber());
+        model.addAttribute("commentTotalPages", commentDtoPages.getTotalPages());
+        model.addAttribute("totalComments", totalComments);
         return "posts/read";
     }
 
@@ -137,6 +138,24 @@ public class PostController {
         }
 
         commentService.write(currentMember.getMemberId(), postId, writeDto);
+        return "redirect:/post/{id}";
+    }
+
+    @PostMapping("/{id}/comment/{cid}")
+    public String writeReply(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            @PathVariable("cid") Long commentId,
+            @Valid @ModelAttribute("writeDto") CommentWriteDto writeDto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addAttribute("id", postId);
+        if (result.hasErrors()) {
+            return "redirect:/post/{id}";
+        }
+
+        commentService.writeReply(currentMember.getMemberId(), postId, commentId, writeDto);
         return "redirect:/post/{id}";
     }
 

@@ -2,108 +2,140 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/fragments/header :: header}"></head>
 <body>
-  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
-  <div class="container">
-    <div class="py-3 text-center">
-      <h3>게시판</h3>
-    </div>
-    <hr />
-    <div>
-      <p><strong th:text="${readDto.title}"></strong></p>
-    </div>
-    <div>
-      <div style="display: inline-block">
-        <small th:text="${readDto.author}"></small>
-      </div>
-      <div style="display: inline-block; float:right">
-        <div style="display: inline-block; padding-inline-end: 0.5rem">
-          <small th:text="|조회수 ${readDto.view}|"></small>
-        </div>
-        <div style="display: inline-block; padding-inline-start: 0.5rem">
-          <small th:text="|작성일 ${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}|"></small>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div th:utext="${readDto.content}"></div>
-    <div class="row my-3">
-      <div class="col">
-        <strong>전체 댓글 <span class="text-danger" th:text="${commentTotalElements}"></span>개</strong>
-      </div>
-    </div>
-    <hr />
-    <div class="row" th:each="commentListDto : ${commentListDtos}" style="padding-inline: 0.5rem">
-      <div class="col-1">
-        <small><strong th:text="${commentListDto.author}"></strong></small>
-      </div>
-      <div class="col-9" style="cursor: pointer">
-        <span th:text="${commentListDto.content}"></span>
-      </div>
-      <div class="col-2">
-        <div class="float-end">
-          <form th:if="${commentListDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
-                th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${commentListDto.commentId})}|"
-                method="post" style="display: inline">
-            <button class="btn-close" style="width: 1px;" type="submit"></button>
-          </form>
-          <small class="text-muted ml-2" th:text="${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
-        </div>
-      </div>
-      <hr/>
-    </div>
-    <div class="row">
-      <div class="col">
-        <nav>
-          <ul class="pagination justify-content-center">
-            <li class="page-item" th:unless="${commentPageNumber < 10}">
-              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10})}">
-                <span>&laquo;</span>
-              </a>
-            </li>
-            <li th:each="page :
-             ${#numbers.sequence(
-                commentPageNumber - commentPageNumber % 10 + 1,
-                T(java.lang.Math).min(commentPageNumber - commentPageNumber % 10 + 10, T(java.lang.Math).max(commentTotalPages, 1))
-              )}" th:class="${page == commentPageNumber + 1 ? 'page-item active' : 'page-item'}">
-              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${page})}" th:text="${page}"></a>
-            </li>
-            <li class="page-item" th:if="${commentPageNumber < (commentTotalPages - 1) - (commentTotalPages - 1) % 10}">
-              <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10 + 11})}">
-                <span>&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    <div class="row input-group mb-3">
-      <div class="col">
-        <form th:action="|@{/post/{id}/comment(id=${readDto.postId})}|" th:object="${commentWriteDto}" method="post">
-          <textarea id="comment_input" th:field="*{content}" class="form-control" style="resize: none" required></textarea>
-          <button id="comment_write" class="btn btn-outline-secondary float-end" type="submit">작성</button>
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="float-start">
-          <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
-        </div>
-        <div class="float-end">
-          <form th:action="|@{/post/{id}/remove(id=${readDto.postId})}|" method="post"
-                th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
-                style="display: inline">
-            <button class="btn btn-danger" type="submit">글삭제</button>
-          </form>
-          <button class="btn btn-info" type="button"
-                  th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
-                  th:onclick="|location.href='@{/post/{id}/edit(id=${readDto.postId})}'|">글수정</button>
-          <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
-        </div>
-      </div>
-    </div>
-    <div th:replace="~{/fragments/footer :: footer}"></div>
+<nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+<div class="container">
+  <div class="py-3 text-center">
+    <h3>게시판</h3>
   </div>
+  <hr/>
+  <div>
+    <p><strong th:text="${readDto.title}"></strong></p>
+  </div>
+  <div>
+    <div style="display: inline-block">
+      <small th:text="${readDto.author}"></small>
+    </div>
+    <div style="display: inline-block; float:right">
+      <div style="display: inline-block; padding-inline-end: 0.5rem">
+        <small th:text="|조회수 ${readDto.view}|"></small>
+      </div>
+      <div style="display: inline-block; padding-inline-start: 0.5rem">
+        <small th:text="|작성일 ${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}|"></small>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div th:utext="${readDto.content}"></div>
+  <div class="row my-3">
+    <div class="col">
+      <strong>전체 댓글 <span class="text-danger" th:text="${totalComments}"></span>개</strong>
+    </div>
+  </div>
+  <hr/>
+  <div th:each="commentDto : ${commentDtos}" style="padding-inline: 0.5rem">
+    <div th:data-id="${commentDto.commentId}">
+      <div class="row">
+        <div class="col-1">
+          <small><strong th:text="${commentDto.author}"></strong></small>
+        </div>
+        <div class="col-8 ms-3" id="comment" style="cursor: pointer">
+          <span th:if="${commentDto.removed}"><small class="text-muted">(작성자에 의해 삭제된 댓글입니다)</small></span>
+          <span th:unless="${commentDto.removed}" th:text="${commentDto.content}"></span>
+        </div>
+        <div class="col">
+          <div class="float-end">
+            <form th:if="${commentDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                  th:unless="${commentDto.removed}"
+                  th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${commentDto.commentId})}|"
+                  method="post" style="display: inline">
+              <button class="btn-close" style="width: 1px;" type="submit"></button>
+            </form>
+            <small class="text-muted ml-2"
+                   th:text="${#temporals.format(commentDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:each="childrenDto : ${commentDto.children}">
+      <hr/>
+      <div class="row ms-5">
+        <div class="col-1">
+          <small><strong th:text="${childrenDto.author}"></strong></small>
+        </div>
+        <div class="col-8 ms-3" style="cursor: pointer">
+          <span th:text="${childrenDto.content}"></span>
+        </div>
+        <div class="col">
+          <div class="float-end">
+            <form th:if="${childrenDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                  th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${childrenDto.commentId})}|"
+                  method="post" style="display: inline">
+              <button class="btn-close" style="width: 1px;" type="submit"></button>
+            </form>
+            <small class="text-muted ml-2"
+                   th:text="${#temporals.format(childrenDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+  </div>
+  <div class="row">
+    <div class="col">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:unless="${commentPageNumber < 10}">
+            <a class="page-link"
+               th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10})}">
+              <span>&laquo;</span>
+            </a>
+          </li>
+          <li th:each="page :
+           ${#numbers.sequence(
+              commentPageNumber - commentPageNumber % 10 + 1,
+              T(java.lang.Math).min(commentPageNumber - commentPageNumber % 10 + 10, T(java.lang.Math).max(commentTotalPages, 1))
+            )}" th:class="${page == commentPageNumber + 1 ? 'page-item active' : 'page-item'}">
+            <a class="page-link" th:href="@{/post/{id}(id=${readDto.postId}, page=${page})}" th:text="${page}"></a>
+          </li>
+          <li class="page-item" th:if="${commentPageNumber < (commentTotalPages - 1) - (commentTotalPages - 1) % 10}">
+            <a class="page-link"
+               th:href="@{/post/{id}(id=${readDto.postId}, page=${commentPageNumber - commentPageNumber % 10 + 11})}">
+              <span>&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="row input-group mb-3">
+    <div class="col">
+      <form th:action="|@{/post/{id}/comment(id=${readDto.postId})}|" th:object="${commentWriteDto}" method="post">
+        <textarea id="comment_input" th:field="*{content}" class="form-control" style="resize: none"
+                  required></textarea>
+        <button id="comment_write" class="btn btn-outline-secondary float-end" type="submit">작성</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="float-start">
+        <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
+      </div>
+      <div class="float-end">
+        <form th:action="|@{/post/{id}/remove(id=${readDto.postId})}|" method="post"
+              th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+              style="display: inline">
+          <button class="btn btn-danger" type="submit">글삭제</button>
+        </form>
+        <button class="btn btn-info" type="button"
+                th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+                th:onclick="|location.href='@{/post/{id}/edit(id=${readDto.postId})}'|">글수정
+        </button>
+        <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
+      </div>
+    </div>
+  </div>
+  <div th:replace="~{/fragments/footer :: footer}"></div>
   <script th:inline="javascript">
     $(document).on('keypress', '#comment_input', e => {
       if (e.keyCode === 13 && !e.shiftKey) {
@@ -111,6 +143,33 @@
         return false;
       }
     });
+
+    $(document).on('keypress', '#reply_input', e => {
+      if (e.keyCode === 13 && !e.shiftKey) {
+        $('#reply_write').click();
+        return false;
+      }
+    });
+
+    $(document).on('click', '#comment', e => {
+      if ($(e.currentTarget).parent().parent().find('#reply_box').length > 0) {
+        $(e.currentTarget).parent().parent().find('#reply_box').remove();
+        return;
+      }
+
+      $(document).find('#reply_box').remove();
+      $(e.currentTarget).parent().parent().append(`
+                <div class="row input-group ms-4 my-3" id="reply_box">
+                  <div class="col">
+                    <form action="/post/[[${readDto.postId}]]/comment/${$(e.currentTarget).parent().parent().attr('data-id')}" method="post">
+                      <textarea id="reply_input" name="content" class="form-control" style="resize: none" required></textarea>
+                      <button id="reply_write" class="btn btn-outline-secondary float-end" type="submit">작성</button>
+                    </form>
+                  </div>
+                </div>
+        `);
+    });
   </script>
+</div>
 </body>
 </html>

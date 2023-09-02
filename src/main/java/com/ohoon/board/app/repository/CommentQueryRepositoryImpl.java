@@ -23,7 +23,10 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
     public Page<Comment> listByPostId(Long postId, Pageable pageable) {
         List<Comment> content = queryFactory
                 .selectFrom(comment)
-                .where(comment.post.id.eq(postId).and(comment.isRemoved.isFalse()))
+                .where(comment.post.id.eq(postId)
+                        .and(comment.parent.isNull())
+                        .and(comment.isRemoved.isFalse()
+                                .or(comment.children.isNotEmpty())))
                 .orderBy(comment.id.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -32,7 +35,9 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         JPAQuery<Long> countQuery = queryFactory
                 .select(comment.count())
                 .from(comment)
-                .where(comment.post.id.eq(postId).and(comment.isRemoved.isFalse()));
+                .where(comment.post.id.eq(postId)
+                        .and(comment.parent.isNull())
+                        .and(comment.isRemoved.isFalse()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }

@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +28,10 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
     @NotNull
     @Size(max=255)
     private String content;
@@ -34,6 +41,9 @@ public class Comment extends BaseEntity {
     private String author;
 
     private boolean isRemoved;
+
+    @OneToMany(mappedBy = "parent")
+    private final List<Comment> children = new ArrayList<>();
 
     private Comment(String content, String author, Member member, Post post) {
         this.content = content;
@@ -56,5 +66,10 @@ public class Comment extends BaseEntity {
 
     public void remove() {
         this.isRemoved = true;
+    }
+
+    public void assignParent(Comment comment) {
+        this.parent = comment;
+        comment.getChildren().add(this);
     }
 }

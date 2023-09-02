@@ -1,15 +1,16 @@
 package com.ohoon.board.app.dto;
 
 import com.ohoon.board.domain.Comment;
-import com.ohoon.board.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentListDto {
+public class CommentChildDto {
 
     private Long commentId;
 
@@ -23,13 +24,16 @@ public class CommentListDto {
 
     private boolean isRemoved;
 
-    public static CommentListDto fromEntity(Comment comment) {
-        return new CommentListDto(
+    private LocalDateTime createdDate;
+
+    public static CommentChildDto fromEntity(Comment comment) {
+        return new CommentChildDto(
                 comment.getId(),
                 comment.getMemberId(),
                 comment.getPostId(),
                 comment.getContent(),
                 comment.getAuthor(),
-                comment.isRemoved());
+                comment.isRemoved(),
+                comment.getCreatedDate());
     }
 }
