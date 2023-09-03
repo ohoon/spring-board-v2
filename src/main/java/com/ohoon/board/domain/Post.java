@@ -46,6 +46,13 @@ public class Post extends BaseEntity {
     )
     private final List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private final List<Vote> votes = new ArrayList<>();
+
     private Post(String title, String content, String author, Member member) {
         this.title = title;
         this.content = content;
@@ -76,5 +83,18 @@ public class Post extends BaseEntity {
 
     public void increaseView() {
         this.view++;
+    }
+
+    public void addVote(Vote vote) {
+        this.votes.add(vote);
+    }
+
+    public boolean isVotedBy(Long memberId) {
+        return this.votes.stream()
+                .anyMatch(vote -> vote.getMemberId().equals(memberId));
+    }
+
+    public int getTotalVotes() {
+        return this.votes.size();
     }
 }

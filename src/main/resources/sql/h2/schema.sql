@@ -56,6 +56,17 @@ CREATE TABLE comment (
     last_modified_date DATETIME     NOT NULL,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id),
-    FOREIGN KEY (post_id) REFERENCES post (post_id),
+    FOREIGN KEY (post_id)   REFERENCES post (post_id),
     FOREIGN KEY (parent_id) REFERENCES comment (comment_id)
+);
+
+CREATE TABLE vote (
+    vote_id            BIGINT,
+    member_id          BIGINT,
+    post_id            BIGINT,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (vote_id),
+    FOREIGN KEY (member_id) REFERENCES member (member_id),
+    FOREIGN KEY (post_id)   REFERENCES post (post_id)
 );
