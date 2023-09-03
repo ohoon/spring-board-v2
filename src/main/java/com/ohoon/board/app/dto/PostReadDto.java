@@ -22,7 +22,9 @@ public class PostReadDto {
 
     private String author;
 
-    private Long view;
+    private long view;
+
+    private int totalVotes;
 
     private LocalDateTime createdDate;
 
@@ -34,6 +36,7 @@ public class PostReadDto {
                 post.getContent(),
                 post.getAuthor(),
                 post.getView(),
+                post.getTotalVotes(),
                 post.getCreatedDate());
     }
 }

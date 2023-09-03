@@ -124,6 +124,17 @@ public class PostController {
         return "redirect:/post";
     }
 
+    @PostMapping("/{id}/vote")
+    public String vote(
+            @CurrentMember CurrentMemberDto currentMember,
+            @PathVariable("id") Long postId,
+            RedirectAttributes redirectAttributes
+    ) {
+        postService.vote(currentMember.getMemberId(), postId);
+        redirectAttributes.addAttribute("id", postId);
+        return "redirect:/post/{id}";
+    }
+
     @PostMapping("/{id}/comment")
     public String writeComment(
             @CurrentMember CurrentMemberDto currentMember,

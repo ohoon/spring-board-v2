@@ -18,11 +18,13 @@ public class PostListDto {
 
     private String title;
 
-    private int totalComment;
+    private int totalComments;
 
     private String author;
 
     private Long view;
+
+    private int totalVotes;
 
     private LocalDateTime createdDate;
 
@@ -34,6 +36,7 @@ public class PostListDto {
                 post.getTotalComments(),
                 post.getAuthor(),
                 post.getView(),
+                post.getTotalVotes(),
                 post.getCreatedDate());
     }
 }

@@ -4,12 +4,14 @@ import com.ohoon.board.app.dto.PostEditDto;
 import com.ohoon.board.app.dto.PostListDto;
 import com.ohoon.board.app.dto.PostReadDto;
 import com.ohoon.board.app.dto.PostWriteDto;
+import com.ohoon.board.app.exception.DuplicateVoteException;
 import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.exception.PostNotFoundException;
 import com.ohoon.board.app.repository.MemberRepository;
 import com.ohoon.board.app.repository.PostRepository;
 import com.ohoon.board.domain.Member;
 import com.ohoon.board.domain.Post;
+import com.ohoon.board.domain.Vote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,5 +66,18 @@ public class PostService {
         Post findPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
         return findPost.getMemberId().equals(memberId);
+    }
+
+    @Transactional
+    public void vote(Long memberId, Long postId) {
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
+        if (findPost.isVotedBy(memberId)) {
+            throw new DuplicateVoteException("이미 추천한 게시글입니다.");
+        }
+
+        findPost.addVote(Vote.create(findMember, findPost));
     }
 }

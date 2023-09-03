@@ -17,15 +17,29 @@
     </div>
     <div style="display: inline-block; float:right">
       <div style="display: inline-block; padding-inline-end: 0.5rem">
-        <small th:text="|조회수 ${readDto.view}|"></small>
+        <small th:text="|조회 ${readDto.view}|"></small>
+      </div>
+      <div style="display: inline-block; padding-inline-end: 0.5rem">
+        <small th:text="|추천 ${readDto.totalVotes}|"></small>
+      </div>
+      <div style="display: inline-block; padding-inline-end: 0.5rem">
+        <small th:text="|댓글 ${totalComments}|"></small>
       </div>
       <div style="display: inline-block; padding-inline-start: 0.5rem">
-        <small th:text="|작성일 ${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}|"></small>
+        <small th:text="${#temporals.format(readDto.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></small>
       </div>
     </div>
   </div>
   <hr/>
-  <div th:utext="${readDto.content}"></div>
+  <div class="my-3" th:utext="${readDto.content}"></div>
+  <div class="text-center mb-3">
+    <form th:action="|@{/post/{postId}/vote(postId=${readDto.postId})}|"
+          method="post" style="display: inline">
+      <button class="bi-suit-heart-fill border rounded-pill px-3 py-2" type="submit">
+        <small class="text-mute ms-1" th:text="${readDto.totalVotes}"></small>
+      </button>
+    </form>
+  </div>
   <div class="row my-3">
     <div class="col">
       <strong>전체 댓글 <span class="text-danger" th:text="${totalComments}"></span>개</strong>

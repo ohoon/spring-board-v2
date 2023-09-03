@@ -25,10 +25,11 @@
       <thead>
       <tr>
         <th scope="col" style="width: 7%">번호</th>
-        <th scope="col" style="width: 62%">제목</th>
+        <th scope="col" style="width: 60%">제목</th>
         <th scope="col" style="width: 13%">작성자</th>
         <th scope="col" style="width: 10%">작성일</th>
-        <th scope="col" style="width: 8%">조회</th>
+        <th scope="col" style="width: 5%">조회</th>
+        <th scope="col" style="width: 5%">추천</th>
       </tr>
       </thead>
       <tbody>
@@ -40,8 +41,8 @@
           <a th:href="|@{/post/{id}(id=${listDto.postId})}|">
             <span th:text="${listDto.title}"></span>
           </a>
-          <small th:if="${listDto.totalComment > 0}"
-                 th:text="' [' + ${listDto.totalComment} + '] '"
+          <small th:if="${listDto.totalComments > 0}"
+                 th:text="' [' + ${listDto.totalComments} + '] '"
                  class="text-muted"></small>
         </td>
         <td th:text="${listDto.author}"></td>
@@ -56,6 +57,7 @@
                  th:text="${#temporals.format(listDto.createdDate, 'yyyy/MM/dd')}"></small>
         </td>
         <td><small th:text="${listDto.view}"></small></td>
+        <td><small th:text="${listDto.totalVotes}"></small></td>
       </tr>
       <tr th:if="${listDtos.isEmpty()}">
         <td colspan="5" class="text-center">게시글이 없습니다.</td>
