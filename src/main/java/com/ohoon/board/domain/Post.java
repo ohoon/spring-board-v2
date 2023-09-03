@@ -77,8 +77,10 @@ public class Post extends BaseEntity {
         this.isRemoved = true;
     }
 
-    public int getTotalComments() {
-        return this.comments.size();
+    public long getTotalComments() {
+        return this.comments.stream()
+                .filter(comment -> !comment.isRemoved())
+                .count();
     }
 
     public void increaseView() {
@@ -94,7 +96,7 @@ public class Post extends BaseEntity {
                 .anyMatch(vote -> vote.getMemberId().equals(memberId));
     }
 
-    public int getTotalVotes() {
+    public long getTotalVotes() {
         return this.votes.size();
     }
 }

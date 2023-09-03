@@ -24,7 +24,7 @@ public class PostReadDto {
 
     private long view;
 
-    private int totalVotes;
+    private long totalVotes;
 
     private LocalDateTime createdDate;
 

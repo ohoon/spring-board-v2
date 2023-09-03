@@ -18,13 +18,13 @@ public class PostListDto {
 
     private String title;
 
-    private int totalComments;
+    private long totalComments;
 
     private String author;
 
     private Long view;
 
-    private int totalVotes;
+    private long totalVotes;
 
     private LocalDateTime createdDate;
 
