@@ -12,7 +12,7 @@
   }
 </style>
 <body>
-  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
   <div class="container">
     <div class="row">
       <div class="col">

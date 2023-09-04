@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/fragments/header :: header}"></head>
 <body>
-<nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+<nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
 <div class="container">
   <div class="py-3 text-center">
     <h3>게시판</h3>
