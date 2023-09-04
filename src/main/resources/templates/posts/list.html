@@ -72,7 +72,12 @@
         <nav>
           <ul class="pagination justify-content-center">
             <li class="page-item" th:unless="${pageNumber < 10}">
-              <a class="page-link" th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
+              <a class="page-link" th:if="${condition.keyword}"
+                 th:href="@{/post(page=${pageNumber - pageNumber % 10}, mode=${condition.mode}, keyword=${condition.keyword})}">
+                <span>&laquo;</span>
+              </a>
+              <a class="page-link" th:unless="${condition.keyword}"
+                 th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
                 <span>&laquo;</span>
               </a>
             </li>
@@ -82,10 +87,18 @@
                 T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, T(java.lang.Math).max(totalPages, 1))
              )}"
                 th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
-              <a class="page-link" th:href="@{/post(page=${page})}" th:text="${page}"></a>
+              <a class="page-link" th:if="${condition.keyword}"
+                 th:href="@{/post(page=${page}, mode=${condition.mode}, keyword=${condition.keyword})}" th:text="${page}"></a>
+              <a class="page-link" th:unless="${condition.keyword}"
+                 th:href="@{/post(page=${page})}" th:text="${page}"></a>
             </li>
             <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
-              <a class="page-link" th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
+              <a class="page-link" th:if="${condition.keyword}"
+                 th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11}, mode=${condition.mode}, keyword=${condition.keyword})}">
+                <span>&raquo;</span>
+              </a>
+              <a class="page-link" th:unless="${condition.keyword}"
+                 th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
                 <span>&raquo;</span>
               </a>
             </li>
@@ -94,6 +107,27 @@
       </div>
       <div class="col-1">
         <button class="btn btn-dark float-right" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 m-auto">
+        <form action method="get" th:object="${condition}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <select class="form-control" th:field="*{mode}">
+                <option value="TITLE_CONTENT" selected>제목/내용</option>
+                <option value="TITLE">제목</option>
+                <option value="CONTENT">내용</option>
+                <option value="AUTHOR">글쓴이</option>
+                <option value="COMMENT">댓글</option>
+              </select>
+            </div>
+            <input class="form-control" id="search" type="text" th:field="*{keyword}">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">검색</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
     <div th:replace="~{/fragments/footer :: footer}"></div>

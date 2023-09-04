@@ -28,10 +28,11 @@ public class PostController {
     @GetMapping("")
     public String list(
             @CurrentMember CurrentMemberDto currentMember,
+            @ModelAttribute("condition") PostSearchCondition condition,
             @PageableDefault(30) Pageable pageable,
             Model model
     ) {
-        Page<PostListDto> postListDtoPages = postService.list(pageable);
+        Page<PostListDto> postListDtoPages = postService.list(condition, pageable);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("listDtos", postListDtoPages.getContent());
         model.addAttribute("pageNumber", postListDtoPages.getNumber());

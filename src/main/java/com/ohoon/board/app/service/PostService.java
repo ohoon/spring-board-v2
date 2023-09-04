@@ -1,9 +1,6 @@
 package com.ohoon.board.app.service;
 
-import com.ohoon.board.app.dto.PostEditDto;
-import com.ohoon.board.app.dto.PostListDto;
-import com.ohoon.board.app.dto.PostReadDto;
-import com.ohoon.board.app.dto.PostWriteDto;
+import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.exception.DuplicateVoteException;
 import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.exception.PostNotFoundException;
@@ -45,8 +42,8 @@ public class PostService {
         return PostReadDto.fromEntity(findPost);
     }
 
-    public Page<PostListDto> list(Pageable pageable) {
-        return postRepository.list(pageable)
+    public Page<PostListDto> list(PostSearchCondition condition, Pageable pageable) {
+        return postRepository.list(condition, pageable)
                 .map(PostListDto::fromEntity);
     }
 
