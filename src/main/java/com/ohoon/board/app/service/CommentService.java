@@ -1,6 +1,7 @@
 package com.ohoon.board.app.service;
 
 import com.ohoon.board.app.dto.CommentDto;
+import com.ohoon.board.app.dto.CommentLeafDto;
 import com.ohoon.board.app.dto.CommentWriteDto;
 import com.ohoon.board.app.exception.CommentNotFoundException;
 import com.ohoon.board.app.exception.MemberNotFoundException;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -55,6 +58,12 @@ public class CommentService {
     public Page<CommentDto> listByPostId(Long postId, Pageable pageable) {
         return commentRepository.listByPostId(postId, pageable)
                 .map(CommentDto::fromEntity);
+    }
+
+    public List<CommentLeafDto> recentList() {
+        return commentRepository.findFirst6ByOrderByIdDesc().stream()
+                .map(CommentLeafDto::fromEntity)
+                .toList();
     }
 
     @Transactional

@@ -13,9 +13,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class CommentDto extends CommentChildDto {
+public class CommentDto extends CommentLeafDto {
 
-    private final List<CommentChildDto> children = new ArrayList<>();
+    private final List<CommentLeafDto> children = new ArrayList<>();
 
     private CommentDto(Long commentId,
                        Long memberId,
@@ -24,7 +24,7 @@ public class CommentDto extends CommentChildDto {
                        String author,
                        boolean isRemoved,
                        LocalDateTime createdDate,
-                       List<CommentChildDto> children) {
+                       List<CommentLeafDto> children) {
         super(commentId, memberId, postId, content, author, isRemoved, createdDate);
         this.children.addAll(children);
     }
@@ -41,7 +41,7 @@ public class CommentDto extends CommentChildDto {
                 comment.getChildren().stream()
                         .filter(child -> !child.isRemoved())
                         .sorted(Comparator.comparing(Comment::getId))
-                        .map(CommentChildDto::fromEntity)
+                        .map(CommentLeafDto::fromEntity)
                         .toList());
     }
 }

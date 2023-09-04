@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -46,6 +48,12 @@ public class PostService {
     public Page<PostListDto> list(Pageable pageable) {
         return postRepository.list(pageable)
                 .map(PostListDto::fromEntity);
+    }
+
+    public List<PostListDto> recentList() {
+        return postRepository.findFirst6ByOrderByIdDesc().stream()
+                .map(PostListDto::fromEntity)
+                .toList();
     }
 
     @Transactional

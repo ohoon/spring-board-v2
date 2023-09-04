@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentChildDto {
+public class CommentLeafDto {
 
     private Long commentId;
 
@@ -26,8 +26,8 @@ public class CommentChildDto {
 
     private LocalDateTime createdDate;
 
-    public static CommentChildDto fromEntity(Comment comment) {
-        return new CommentChildDto(
+    public static CommentLeafDto fromEntity(Comment comment) {
+        return new CommentLeafDto(
                 comment.getId(),
                 comment.getMemberId(),
                 comment.getPostId(),

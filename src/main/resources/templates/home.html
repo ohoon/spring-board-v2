@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/header :: header}"></head>
+<style>
+  .card-text a {
+    color: #111;
+    text-decoration-line: none;
+  }
+  .card-text a:hover {
+    color: #111;
+    text-decoration-line: underline;
+  }
+</style>
+<body>
+  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember == null ? null : currentMember.memberName})}"></nav>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card px-3">
+          <div class="card-body">
+            <h5 class="card-title mb-3">최근 게시물</h5>
+            <p class="card-text" th:each="postListDto : ${postListDtos}">
+              <a th:href="@{/post/{id}(id=${postListDto.postId})}">
+                <span style="max-width: 70%;" th:text="${postListDto.title}"></span>
+              </a>
+              <small class="text-muted" th:text="|[${postListDto.totalComments}]|"></small>
+              <span class="badge badge-secondary float-end" th:text="${#temporals.format(postListDto.createdDate, 'MM/dd HH:mm:ss')}"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card px-3">
+          <div class="card-body">
+            <h5 class="card-title mb-3">최근 댓글</h5>
+            <p class="card-text" th:each="commentLeafDto : ${commentLeafDtos}">
+              <a th:href="@{/post/{id}(id=${commentLeafDto.postId})}">
+                <span class="d-inline-block" style="max-width: 75%;" th:text="${commentLeafDto.content}"></span>
+              </a>
+              <span class="badge badge-secondary float-end" th:text="${#temporals.format(commentLeafDto.createdDate, 'MM/dd HH:mm:ss')}"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{/fragments/footer :: footer}"></div>
+  </div>
+</body>
+</html>
