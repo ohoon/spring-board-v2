@@ -53,7 +53,7 @@ class PostServiceTest {
     @DisplayName("글 리스트")
     @Test
     void list() {
-        Page<PostListDto> before = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> before = postService.list(new PostSearchCondition(), PageRequest.of(0, 30));
 
         postService.write(
                 memberProfileDto.getMemberId(),
@@ -65,7 +65,7 @@ class PostServiceTest {
                 memberProfileDto.getMemberId(),
                 new PostWriteDto("help me", ":("));
 
-        Page<PostListDto> after = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> after = postService.list(new PostSearchCondition(), PageRequest.of(0, 30));
 
         assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(3);
     }
@@ -93,11 +93,11 @@ class PostServiceTest {
                 memberProfileDto.getMemberId(),
                 new PostWriteDto("post write test", "hello world!"));
 
-        Page<PostListDto> before = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> before = postService.list(new PostSearchCondition(), PageRequest.of(0, 30));
 
         postService.remove(postId);
 
-        Page<PostListDto> after = postService.list(PageRequest.of(0, 30));
+        Page<PostListDto> after = postService.list(new PostSearchCondition(), PageRequest.of(0, 30));
 
         assertThat(after.getTotalElements() - before.getTotalElements()).isEqualTo(-1);
     }
