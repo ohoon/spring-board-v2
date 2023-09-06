@@ -17,7 +17,8 @@ public class AuthController {
     @GetMapping("/login")
     public String loginForm(
             @CurrentMember CurrentMemberDto currentMember,
-            Model model) {
+            Model model
+    ) {
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("loginDto", new AuthPasswordLoginDto());
         return "auths/loginForm";

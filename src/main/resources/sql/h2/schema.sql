@@ -3,6 +3,7 @@ CREATE TABLE member (
     username           VARCHAR(20)  NOT NULL,
     nickname           VARCHAR(12)  NOT NULL,
     email              VARCHAR(128) NOT NULL,
+    is_quited          BOOLEAN      NOT NULL,
     created_date       DATETIME     NOT NULL,
     last_modified_date DATETIME     NOT NULL,
     PRIMARY KEY (member_id)

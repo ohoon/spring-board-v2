@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/member/join").permitAll()
-                        .requestMatchers("/post/write", "/post/*/*/**").hasRole("MEMBER")
+                        .requestMatchers("/auth/**", "/member/**", "/post/write", "/post/*/*/**").hasRole("MEMBER")
                         .requestMatchers(HttpMethod.POST, "/post/*").hasRole("MEMBER")
                         .requestMatchers(HttpMethod.GET, "/post", "/post/*").permitAll()
                         .anyRequest().authenticated()
@@ -39,6 +39,9 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll()
+                )
+                .passwordManagement(management -> management
+                        .changePasswordPage("/member/changePassword")
                 )
                 .build();
     }

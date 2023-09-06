@@ -24,7 +24,7 @@ public class MemberDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member findMember = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 아이디가 존재하지 않습니다."));
         AuthPassword findAuthPassword = authPasswordRepository.findByMember(findMember)
                 .orElseThrow(() -> new AuthenticationServiceException("해당 회원의 인증 정보가 존재하지 않습니다."));
         return MemberDetails.create(findMember, findAuthPassword);

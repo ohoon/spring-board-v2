@@ -31,4 +31,8 @@ public class AuthPassword extends BaseEntity {
     public static AuthPassword create(String password, Member member) {
         return new AuthPassword(password, member);
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

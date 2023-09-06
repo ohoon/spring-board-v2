@@ -28,6 +28,8 @@ public class Member extends BaseEntity {
     @NotNull
     private String email;
 
+    private boolean isQuited;
+
     @OneToMany(
             mappedBy = "member",
             cascade = CascadeType.ALL,
@@ -61,5 +63,14 @@ public class Member extends BaseEntity {
     public void addRole(Role role) {
         this.roles.add(role);
         role.assignMember(this);
+    }
+
+    public void modify(String nickname, String email) {
+        this.nickname = nickname;
+        this.email = email;
+    }
+
+    public void quit() {
+        this.isQuited = true;
     }
 }

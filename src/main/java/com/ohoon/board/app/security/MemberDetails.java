@@ -50,7 +50,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !member.isQuited();
     }
 
     private MemberDetails(Member member, AuthPassword authPassword) {
