@@ -47,12 +47,22 @@ public class MemberController {
             @Valid @ModelAttribute(name = "joinDto") MemberJoinDto joinDto,
             BindingResult result
     ) {
+        validateDuplicateUsername(joinDto.getUsername(), result);
         if (result.hasErrors()) {
             return "members/joinForm";
         }
 
         memberService.join(joinDto);
         return "redirect:/login";
+    }
+
+    private void validateDuplicateUsername(String username, BindingResult result) {
+        if (!memberService.isUniqueUsername(username)) {
+            result.addError(new FieldError(
+                    "joinDto",
+                    "username",
+                    "이미 등록된 아이디입니다."));
+        }
     }
 
     @GetMapping("/modify")

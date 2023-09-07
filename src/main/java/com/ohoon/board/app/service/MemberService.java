@@ -62,6 +62,10 @@ public class MemberService {
         findAuthPassword.changePassword(passwordEncoder.encode(newPassword));
     }
 
+    public boolean isUniqueUsername(String username) {
+        return !memberRepository.existsByUsername(username);
+    }
+
     public boolean matchesPassword(Long memberId, String rawPassword) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
