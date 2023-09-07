@@ -54,9 +54,11 @@ public class PostController {
     public String write(
             @CurrentMember CurrentMemberDto currentMember,
             @Valid @ModelAttribute("writeDto") PostWriteDto writeDto,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "posts/writeForm";
         }
 
@@ -104,9 +106,11 @@ public class PostController {
             @PathVariable("id") Long postId,
             @Valid @ModelAttribute("editDto") PostEditDto editDto,
             BindingResult result,
+            Model model,
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "posts/editForm";
         }
 
@@ -142,10 +146,12 @@ public class PostController {
             @PathVariable("id") Long postId,
             @Valid @ModelAttribute("writeDto") CommentWriteDto writeDto,
             BindingResult result,
+            Model model,
             RedirectAttributes redirectAttributes
     ) {
         redirectAttributes.addAttribute("id", postId);
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "redirect:/post/{id}";
         }
 
@@ -160,10 +166,12 @@ public class PostController {
             @PathVariable("cid") Long commentId,
             @Valid @ModelAttribute("writeDto") CommentWriteDto writeDto,
             BindingResult result,
+            Model model,
             RedirectAttributes redirectAttributes
     ) {
         redirectAttributes.addAttribute("id", postId);
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "redirect:/post/{id}";
         }
 

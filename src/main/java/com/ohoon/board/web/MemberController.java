@@ -44,11 +44,14 @@ public class MemberController {
 
     @PostMapping("/join")
     public String join(
+            @CurrentMember CurrentMemberDto currentMember,
             @Valid @ModelAttribute(name = "joinDto") MemberJoinDto joinDto,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         validateDuplicateUsername(joinDto.getUsername(), result);
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "members/joinForm";
         }
 
@@ -80,9 +83,11 @@ public class MemberController {
     public String modify(
             @CurrentMember CurrentMemberDto currentMember,
             @Valid @ModelAttribute("modifyDto") MemberModifyDto modifyDto,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "members/modifyForm";
         }
 
@@ -112,10 +117,12 @@ public class MemberController {
     public String changePassword(
             @CurrentMember CurrentMemberDto currentMember,
             @Valid @ModelAttribute("changePasswordDto") MemberChangePasswordDto changePasswordDto,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         validateOldPassword(currentMember.getMemberId(), changePasswordDto.getOldPassword(), result);
         if (result.hasErrors()) {
+            model.addAttribute("currentMember", currentMember);
             return "members/changePasswordForm";
         }
 
