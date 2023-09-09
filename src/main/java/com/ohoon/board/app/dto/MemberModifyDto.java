@@ -27,14 +27,4 @@ public class MemberModifyDto {
     private LocalDateTime createdDate;
 
     private LocalDateTime lastModifiedDate;
-
-    public static MemberModifyDto fromProfileDto(MemberProfileDto profileDto) {
-        return new MemberModifyDto(
-                profileDto.getUsername(),
-                profileDto.getNickname(),
-                profileDto.getEmail(),
-                profileDto.getCreatedDate(),
-                profileDto.getLastModifiedDate()
-        );
-    }
 }

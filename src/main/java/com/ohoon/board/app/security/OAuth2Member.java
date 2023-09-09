@@ -1,6 +1,7 @@
 package com.ohoon.board.app.security;
 
 import com.ohoon.board.app.dto.CurrentMemberDto;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.Member;
 import com.ohoon.board.domain.AuthSocial;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,7 +50,7 @@ public class OAuth2Member implements OAuth2User {
     }
 
     public CurrentMemberDto getCurrentMember() {
-        return CurrentMemberDto.create(member);
+        return Mapper.toCurrentMemberDto(this.member);
     }
 
     public boolean isMember() {

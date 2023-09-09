@@ -4,6 +4,7 @@ import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.security.CurrentMember;
 import com.ohoon.board.app.service.CommentService;
 import com.ohoon.board.app.service.PostService;
+import com.ohoon.board.app.util.Mapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,8 @@ public class PostController {
     private final PostService postService;
 
     private final CommentService commentService;
+
+    private final Mapper mapper;
 
     @GetMapping("")
     public String list(
@@ -95,7 +98,7 @@ public class PostController {
     ) {
         PostReadDto postReadDto = postService.read(postId);
         model.addAttribute("currentMember", currentMember);
-        model.addAttribute("editDto", PostEditDto.fromReadDto(postReadDto));
+        model.addAttribute("editDto", mapper.toPostEditDto(postReadDto));
         return "posts/editForm";
     }
 

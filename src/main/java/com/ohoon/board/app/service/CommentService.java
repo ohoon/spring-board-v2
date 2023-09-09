@@ -9,6 +9,7 @@ import com.ohoon.board.app.exception.PostNotFoundException;
 import com.ohoon.board.app.repository.CommentRepository;
 import com.ohoon.board.app.repository.MemberRepository;
 import com.ohoon.board.app.repository.PostRepository;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.Comment;
 import com.ohoon.board.domain.Member;
 import com.ohoon.board.domain.Post;
@@ -31,13 +32,15 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
+    private final Mapper mapper;
+
     @Transactional
     public Long write(Long memberId, Long postId, CommentWriteDto commentWriteDto) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
         Post findPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
-        Comment savedComment = commentRepository.save(commentWriteDto.toEntity(findMember, findPost));
+        Comment savedComment = commentRepository.save(mapper.toComment(commentWriteDto, findMember, findPost));
         return savedComment.getId();
     }
 
@@ -49,7 +52,7 @@ public class CommentService {
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
-        Comment child = commentWriteDto.toEntity(findMember, findPost);
+        Comment child = mapper.toComment(commentWriteDto, findMember, findPost);
         child.assignParent(findComment);
         Comment savedComment = commentRepository.save(child);
         return savedComment.getId();
@@ -57,12 +60,12 @@ public class CommentService {
 
     public Page<CommentDto> listByPostId(Long postId, Pageable pageable) {
         return commentRepository.listByPostId(postId, pageable)
-                .map(CommentDto::fromEntity);
+                .map(mapper::toCommentDto);
     }
 
     public List<CommentLeafDto> recentList() {
         return commentRepository.findFirst6ByOrderByIdDesc().stream()
-                .map(CommentLeafDto::fromEntity)
+                .map(mapper::toCommentLeafDto)
                 .toList();
     }
 

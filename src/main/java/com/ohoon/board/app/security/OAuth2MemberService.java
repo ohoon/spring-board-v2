@@ -3,6 +3,7 @@ package com.ohoon.board.app.security;
 import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.repository.MemberRepository;
 import com.ohoon.board.app.repository.AuthSocialRepository;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.*;
 import lombok.*;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,6 +39,8 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest,
 
     private final AuthSocialRepository authSocialRepository;
 
+    private final Mapper mapper;
+
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -65,13 +68,13 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest,
     }
 
     private void joinMember(AuthSocialAttributes authSocialAttributes) {
-        Member savedMember = memberRepository.save(authSocialAttributes.toMemberEntity());
-        authSocialRepository.save(authSocialAttributes.toAuthSocialEntity(savedMember));
+        Member savedMember = memberRepository.save(mapper.toMember(authSocialAttributes));
+        authSocialRepository.save(mapper.toAuthSocial(authSocialAttributes, savedMember));
     }
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class AuthSocialAttributes {
+    public static class AuthSocialAttributes {
 
         private String subject;
 
@@ -104,14 +107,6 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest,
                     yield new AuthSocialAttributes(subject, username, nickname, email, provider);
                 }
             };
-        }
-
-        public Member toMemberEntity() {
-            return Member.create(this.username, this.nickname, this.email, Role.create(RoleType.MEMBER));
-        }
-
-        public AuthSocial toAuthSocialEntity(Member member) {
-            return AuthSocial.create(this.subject, this.provider, member);
         }
     }
 }

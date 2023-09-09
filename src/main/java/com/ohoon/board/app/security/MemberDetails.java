@@ -1,6 +1,7 @@
 package com.ohoon.board.app.security;
 
 import com.ohoon.board.app.dto.CurrentMemberDto;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ public class MemberDetails implements UserDetails {
     private final Member member;
 
     private final AuthPassword authPassword;
+
 
     private final Collection<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public class MemberDetails implements UserDetails {
     }
 
     public CurrentMemberDto getCurrentMember() {
-        return CurrentMemberDto.create(member);
+        return Mapper.toCurrentMemberDto(this.member);
     }
 
     public boolean isMember() {

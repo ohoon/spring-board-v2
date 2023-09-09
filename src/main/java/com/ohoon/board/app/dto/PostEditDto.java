@@ -18,11 +18,4 @@ public class PostEditDto {
 
     @NotEmpty(message = "내용을 입력해주세요.")
     private String content;
-
-    public static PostEditDto fromReadDto(PostReadDto readDto) {
-        return new PostEditDto(
-                readDto.getTitle(),
-                readDto.getContent()
-        );
-    }
 }

@@ -3,6 +3,7 @@ package com.ohoon.board.web;
 import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.security.CurrentMember;
 import com.ohoon.board.app.service.MemberService;
+import com.ohoon.board.app.util.Mapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
 
     private final MemberService memberService;
+
+    private final Mapper mapper;
 
     @GetMapping("")
     public String profile(
@@ -75,7 +78,7 @@ public class MemberController {
     ) {
         MemberProfileDto memberProfileDto = memberService.findById(currentMember.getMemberId());
         model.addAttribute("currentMember", currentMember);
-        model.addAttribute("modifyDto", MemberModifyDto.fromProfileDto(memberProfileDto));
+        model.addAttribute("modifyDto", mapper.toMemberModifyDto(memberProfileDto));
         return "members/modifyForm";
     }
 

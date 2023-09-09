@@ -17,8 +17,4 @@ public class CommentWriteDto {
     @NotEmpty(message = "내용을 입력해주세요.")
     @Size(max = 255)
     private String content;
-
-    public Comment toEntity(Member member, Post post) {
-        return Comment.create(this.content, member, post);
-    }
 }

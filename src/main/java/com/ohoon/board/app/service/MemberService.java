@@ -7,6 +7,7 @@ import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.repository.AuthPasswordRepository;
 import com.ohoon.board.app.repository.MemberRepository;
 import com.ohoon.board.app.repository.AuthSocialRepository;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,13 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final Mapper mapper;
+
     @Transactional
     public Long join(MemberJoinDto memberJoinDto) {
-        Member savedMember = memberRepository.save(memberJoinDto.toMemberEntity());
+        Member savedMember = memberRepository.save(mapper.toMember(memberJoinDto));
         memberJoinDto.setPassword(passwordEncoder.encode(memberJoinDto.getPassword()));
-        authPasswordRepository.save(memberJoinDto.toAuthPasswordEntity(savedMember));
+        authPasswordRepository.save(mapper.toAuthPassword(memberJoinDto, savedMember));
         return savedMember.getId();
     }
 
@@ -40,7 +43,7 @@ public class MemberService {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
         boolean isSocial = authSocialRepository.existsByMember(findMember);
-        return MemberProfileDto.fromEntity(findMember, isSocial);
+        return mapper.toMemberProfileDto(findMember, isSocial);
     }
 
     @Transactional

@@ -27,16 +27,4 @@ public class PostListDto {
     private long totalVotes;
 
     private LocalDateTime createdDate;
-
-    public static PostListDto fromEntity(Post post) {
-        return new PostListDto(
-                post.getId(),
-                post.getMemberId(),
-                post.getTitle(),
-                post.getTotalComments(),
-                post.getAuthor(),
-                post.getView(),
-                post.getTotalVotes(),
-                post.getCreatedDate());
-    }
 }

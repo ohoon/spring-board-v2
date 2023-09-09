@@ -25,15 +25,4 @@ public class CommentLeafDto {
     private boolean isRemoved;
 
     private LocalDateTime createdDate;
-
-    public static CommentLeafDto fromEntity(Comment comment) {
-        return new CommentLeafDto(
-                comment.getId(),
-                comment.getMemberId(),
-                comment.getPostId(),
-                comment.getContent(),
-                comment.getAuthor(),
-                comment.isRemoved(),
-                comment.getCreatedDate());
-    }
 }

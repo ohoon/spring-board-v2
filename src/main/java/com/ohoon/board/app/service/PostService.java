@@ -6,6 +6,7 @@ import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.exception.PostNotFoundException;
 import com.ohoon.board.app.repository.MemberRepository;
 import com.ohoon.board.app.repository.PostRepository;
+import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.Member;
 import com.ohoon.board.domain.Post;
 import com.ohoon.board.domain.Vote;
@@ -26,11 +27,13 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
+    private final Mapper mapper;
+
     @Transactional
     public Long write(Long memberId, PostWriteDto postWriteDto) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
-        Post savedPost = postRepository.save(postWriteDto.toEntity(findMember));
+        Post savedPost = postRepository.save(mapper.toPost(postWriteDto, findMember));
         return savedPost.getId();
     }
 
@@ -39,17 +42,17 @@ public class PostService {
         Post findPost = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
         findPost.increaseView();
-        return PostReadDto.fromEntity(findPost);
+        return mapper.toPostReadDto(findPost);
     }
 
     public Page<PostListDto> list(PostSearchCondition condition, Pageable pageable) {
         return postRepository.list(condition, pageable)
-                .map(PostListDto::fromEntity);
+                .map(mapper::toPostListDto);
     }
 
     public List<PostListDto> recentList() {
         return postRepository.findFirst6ByOrderByIdDesc().stream()
-                .map(PostListDto::fromEntity)
+                .map(mapper::toPostListDto)
                 .toList();
     }
 

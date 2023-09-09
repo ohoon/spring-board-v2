@@ -20,8 +20,4 @@ public class PostWriteDto {
 
     @NotEmpty(message = "내용을 입력해주세요.")
     private String content;
-
-    public Post toEntity(Member member) {
-        return Post.create(this.title, this.content, member);
-    }
 }

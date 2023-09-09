@@ -17,7 +17,7 @@ public class CommentDto extends CommentLeafDto {
 
     private final List<CommentLeafDto> children = new ArrayList<>();
 
-    private CommentDto(Long commentId,
+    public CommentDto(Long commentId,
                        Long memberId,
                        Long postId,
                        String content,
@@ -27,21 +27,5 @@ public class CommentDto extends CommentLeafDto {
                        List<CommentLeafDto> children) {
         super(commentId, memberId, postId, content, author, isRemoved, createdDate);
         this.children.addAll(children);
-    }
-
-    public static CommentDto fromEntity(Comment comment) {
-        return new CommentDto(
-                comment.getId(),
-                comment.getMemberId(),
-                comment.getPostId(),
-                comment.getContent(),
-                comment.getAuthor(),
-                comment.isRemoved(),
-                comment.getCreatedDate(),
-                comment.getChildren().stream()
-                        .filter(child -> !child.isRemoved())
-                        .sorted(Comparator.comparing(Comment::getId))
-                        .map(CommentLeafDto::fromEntity)
-                        .toList());
     }
 }

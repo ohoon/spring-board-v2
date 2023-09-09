@@ -33,16 +33,4 @@ public class MemberJoinDto {
     @NotEmpty(message = "이메일을 입력해주세요.")
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;
-
-    public Member toMemberEntity() {
-        return Member.create(
-                this.username,
-                this.nickname,
-                this.email,
-                Role.create(RoleType.MEMBER));
-    }
-
-    public AuthPassword toAuthPasswordEntity(Member member) {
-        return AuthPassword.create(this.password, member);
-    }
 }
