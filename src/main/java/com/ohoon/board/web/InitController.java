@@ -8,10 +8,12 @@ import com.ohoon.board.app.service.MemberService;
 import com.ohoon.board.app.service.PostService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Profile("local")
 @Controller
 @RequiredArgsConstructor
 public class InitController {
