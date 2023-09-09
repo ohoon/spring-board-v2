@@ -38,3 +38,6 @@ out/
 
 ### Draw-io ###
 *.bkp
+
+### Secret ###
+**/src/**/resources/application-oauth2.yml
