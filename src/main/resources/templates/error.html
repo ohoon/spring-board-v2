@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/header :: header}"></head>
+<body>
+</body>
+<script th:inline="javascript">
+    const message = [[${message != null ? message : "오류가 발생하였습니다"}]]
+  $(document).ready(() => {
+      alert(message)
+      window.location.replace("/")
+  });
+</script>
+</html>
