@@ -30,7 +30,8 @@
         <a class="text-muted" th:href="@{/member/join}" th:text="회원가입"></a>
       </div>
       <div class="col-4">
-        // 소셜 로그인
+        <button class="btn btn-primary btn-lg my-1" style="width: 100%" type="button" th:onclick="|location.href='@{/oauth2/authorization/google}'|">구글 로그인</button>
+        <button class="btn btn-primary btn-lg my-1" style="width: 100%" type="button" th:onclick="|location.href='@{/oauth2/authorization/naver}'|">네이버 로그인</button>
       </div>
     </div>
     <div th:replace="~{/fragments/footer :: footer}"></div>

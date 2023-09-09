@@ -58,9 +58,11 @@
     <div class="row">
       <div class="col">
         <div class="d-inline-flex float-end">
-          <button class="btn btn-dark mx-1" type="button" th:onclick="|location.href='@{/.well-known/change-password}'|">비밀번호 변경</button>
+          <button class="btn btn-dark mx-1" type="button" th:onclick="|location.href='@{/.well-known/change-password}'|"
+                  th:unless="${profileDto.social}">비밀번호 변경</button>
           <button class="btn btn-dark mx-1" type="button" th:onclick="|location.href='@{/member/modify}'|">정보 수정</button>
-          <form class="mx-1" th:action="@{/member/quit}" method="post">
+          <form class="mx-1" th:action="@{/member/quit}" method="post"
+                th:unless="${profileDto.social}">
             <button class="btn btn-dark" type="submit">회원 탈퇴</button>
           </form>
         </div>

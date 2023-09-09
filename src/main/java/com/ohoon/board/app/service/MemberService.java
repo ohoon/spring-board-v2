@@ -6,6 +6,7 @@ import com.ohoon.board.app.dto.MemberProfileDto;
 import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.repository.AuthPasswordRepository;
 import com.ohoon.board.app.repository.MemberRepository;
+import com.ohoon.board.app.repository.AuthSocialRepository;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ public class MemberService {
 
     private final AuthPasswordRepository authPasswordRepository;
 
+    private final AuthSocialRepository authSocialRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -36,7 +39,8 @@ public class MemberService {
     public MemberProfileDto findById(Long memberId) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
-        return MemberProfileDto.fromEntity(findMember);
+        boolean isSocial = authSocialRepository.existsByMember(findMember);
+        return MemberProfileDto.fromEntity(findMember, isSocial);
     }
 
     @Transactional

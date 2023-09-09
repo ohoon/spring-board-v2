@@ -43,6 +43,11 @@ public class SecurityConfig {
                 .passwordManagement(management -> management
                         .changePasswordPage("/member/changePassword")
                 )
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll()
+                )
                 .build();
     }
 }

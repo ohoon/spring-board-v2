@@ -19,6 +19,19 @@ CREATE TABLE auth_password (
     FOREIGN KEY (member_id) REFERENCES member (member_id)
 );
 
+CREATE TYPE provider_type AS ENUM('GOOGLE', 'NAVER');
+
+CREATE TABLE auth_social (
+    auth_social_id     BIGINT,
+    member_id          BIGINT,
+    subject            VARCHAR(255) NOT NULL,
+    provider           PROVIDER_TYPE NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (auth_social_id),
+    FOREIGN KEY (member_id) REFERENCES member (member_id)
+);
+
 CREATE TYPE role_type AS ENUM('MEMBER', 'ADMIN');
 
 CREATE TABLE role (
