@@ -132,8 +132,8 @@ Spring Security, Spring Data Jpa, Querydsl, OAuth 2.0 등의 기술들을 학습
 
      
  ### 2. DB 설계
-
-![erd](https://github.com/ohoon/spring-board-v2/assets/46547443/e16fe226-f80c-4cb6-99d2-3e2d0c2ed7cd)   
+ 
+![erd](https://github.com/ohoon/spring-board-v2/assets/46547443/d6282bc5-137e-4069-9206-b9d7c72c9a89)   
    
 <br/>
 
