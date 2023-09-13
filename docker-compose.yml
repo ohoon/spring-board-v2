@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  database:
+    container_name: db_mysql
+    build:
+      dockerfile: Dockerfile
+      context: ./mysql
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./mysql/sqls/:/docker-entrypoint-initdb.d/
+      - ./mysql/mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: board
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_TCP_PORT: 3333
+    restart: unless-stopped
+
+  application:
+    container_name: app
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    ports:
+      - "80:8080"
+    depends_on:
+      - database
+    restart: on-failure

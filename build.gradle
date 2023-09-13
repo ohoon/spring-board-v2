@@ -1,14 +1,7 @@
-buildscript {
-	ext {
-		queryDslVersion = "5.0.0"
-	}
-}
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.2'
 	id 'io.spring.dependency-management' version '1.1.2'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"		// querydsl
 }
 
 group = 'com.ohoon'
@@ -38,13 +31,14 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
 	// querydsl
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+	implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.28'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// 테스트용 lombok
@@ -60,21 +54,16 @@ tasks.named('test') {
 }
 
 // querydsl 설정
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-	jpa = true;
-	querydslSourcesDir = querydslDir
-}
+def querydslDir = "${buildDir}/generated/querydsl"
 
 sourceSets {
-	main.java.srcDir querydslDir
+	main.java.srcDirs += [ querydslDir ]
 }
 
-configurations {
-	querydsl.extendsFrom compileClasspath
+tasks.withType(JavaCompile).configureEach {
+	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
 }
 
-compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
+clean.doLast {
+	file(querydslDir).deleteDir()
 }
