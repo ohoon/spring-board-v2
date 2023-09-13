@@ -1,12 +1,10 @@
 version: "3.8"
 services:
-  database:
-    container_name: db_mysql
+  mysql:
+    container_name: board-mysql
     build:
       dockerfile: Dockerfile
       context: ./mysql
-    ports:
-      - "3333:3333"
     volumes:
       - ./mysql/sqls/:/docker-entrypoint-initdb.d/
       - ./mysql/mysql_data:/var/lib/mysql
@@ -17,13 +15,24 @@ services:
       MYSQL_TCP_PORT: 3333
     restart: unless-stopped
 
-  application:
-    container_name: app
+  app:
+    container_name: board-app
     build:
       dockerfile: Dockerfile
       context: ./
-    ports:
-      - "80:8080"
     depends_on:
-      - database
+      - mysql
     restart: on-failure
+
+  nginx:
+    container_name: board-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "80:80"
+    links:
+      - app
+    depends_on:
+      - app
+    restart: always

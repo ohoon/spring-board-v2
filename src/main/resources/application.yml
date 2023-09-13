@@ -46,7 +46,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db_mysql:3333/board?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://board-mysql:3333/board?useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
 
