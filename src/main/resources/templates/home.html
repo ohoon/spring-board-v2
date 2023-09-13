@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/fragments/header :: header}"></head>
+<head th:replace="~{fragments/header :: header}"></head>
 <style>
   .card-text a {
     color: #111;
@@ -12,7 +12,7 @@
   }
 </style>
 <body>
-  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+  <nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
   <div class="container">
     <div class="row">
       <div class="col">
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div th:replace="~{/fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </body>
 </html>

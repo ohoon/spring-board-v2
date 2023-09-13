@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/fragments/header :: header}"></head>
+<head th:replace="~{fragments/header :: header}"></head>
 <style>
   .fieldError {
     border-color: #bd2130;
@@ -10,7 +10,7 @@
   }
 </style>
 <body>
-  <nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+  <nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
   <div class="container">
     <form action th:object="${joinDto}" method="post">
       <div class="form-group">
@@ -39,7 +39,7 @@
       </div>
       <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
-    <div th:replace="~{/fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </body>
 </html>
