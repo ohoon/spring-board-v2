@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/fragments/header :: header}"></head>
+<head th:replace="~{fragments/header :: header}"></head>
 <style>
   .errorMsg {
     color: #bd2130;
   }
 </style>
 <body>
-<nav th:replace="~{/fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+<nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
   <div class="container">
     <div class="row">
       <div class="col-4 ml-auto">
@@ -34,7 +34,7 @@
         <button class="btn btn-primary btn-lg my-1" style="width: 100%" type="button" th:onclick="|location.href='@{/oauth2/authorization/naver}'|">네이버 로그인</button>
       </div>
     </div>
-    <div th:replace="~{/fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
   </div>
 </body>
 </html>

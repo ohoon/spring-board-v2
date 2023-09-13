@@ -41,3 +41,6 @@ out/
 
 ### Secret ###
 **/src/**/resources/application-oauth2.yml
+
+### Mysql Data ###
+/mysql/mysql_data
