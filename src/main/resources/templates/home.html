@@ -26,6 +26,9 @@
               <small class="text-muted" th:text="|[${postListDto.totalComments}]|"></small>
               <span class="badge badge-secondary float-end" th:text="${#temporals.format(postListDto.createdDate, 'MM/dd HH:mm:ss')}"></span>
             </p>
+            <p th:if="${postListDtos.isEmpty()}">
+              <span class="text-center">최근 게시글이 없습니다.</span>
+            </p>
           </div>
         </div>
       </div>
@@ -38,6 +41,9 @@
                 <span class="d-inline-block" style="max-width: 75%;" th:text="${commentLeafDto.content}"></span>
               </a>
               <span class="badge badge-secondary float-end" th:text="${#temporals.format(commentLeafDto.createdDate, 'MM/dd HH:mm:ss')}"></span>
+            </p>
+            <p th:if="${commentLeafDtos.isEmpty()}">
+              <span class="text-center">최근 댓글이 없습니다.</span>
             </p>
           </div>
         </div>
