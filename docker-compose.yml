@@ -1,27 +1,14 @@
 version: "3.8"
 services:
-  mysql:
-    container_name: board-mysql
-    build:
-      dockerfile: Dockerfile
-      context: ./mysql
-    volumes:
-      - ./mysql/sqls/:/docker-entrypoint-initdb.d/
-      - ./mysql/mysql_data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: board
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_TCP_PORT: 3333
-    restart: unless-stopped
-
   app:
     container_name: board-app
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       context: ./
-    depends_on:
-      - mysql
+    environment:
+      HOST: ${HOST}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      NAVER_CLIENT_SECRET: ${NAVER_CLIENT_SECRET}
     restart: on-failure
 
   nginx:
