@@ -1,6 +1,6 @@
 # Spring Board
 > Spring Boot 3 기반으로 하는 게시판 프로젝트입니다.
-- Site URL: [http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/](http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/)
+- Site URL: [http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/](http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/) [베포 중단중]
 
 ![홈 화면](https://github.com/ohoon/spring-board-v2/assets/46547443/bc668bcd-5268-439a-b3c8-87a4bbb9c2eb)
 
@@ -11,7 +11,7 @@
   - [사용 기술](#3-사용-기술)   
      - [백엔드](#3-1-백엔드)
      - [프론트엔드](#3-2-프론트엔드)
-     - [데브옵스](#3-3-데브옵스)
+     - [인프라](#3-3-인프라)
   - [실행 화면](#4-실행-화면)   
 
 - [구조 및 설계](#구조-및-설계)
@@ -60,7 +60,7 @@ Spring Security, Spring Data Jpa, Querydsl, OAuth 2.0 등의 기술들을 학습
 - Bootstrap 5.3.1
 - summernote 0.8.18
 
-#### 3-3 데브옵스
+#### 3-3 인프라
 - Docker
 - Docker-compose
 - Jenkins
