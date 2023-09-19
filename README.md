@@ -1,6 +1,6 @@
 # Spring Board
 > Spring Boot 3 기반으로 하는 게시판 프로젝트입니다.
-- Site URL: [http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/](http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/) [베포 중단중]
+- Site URL: ~~[http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/](http://ec2-3-39-94-33.ap-northeast-2.compute.amazonaws.com/)~~ *배포 중단
 
 ![홈 화면](https://github.com/ohoon/spring-board-v2/assets/46547443/bc668bcd-5268-439a-b3c8-87a4bbb9c2eb)
 
