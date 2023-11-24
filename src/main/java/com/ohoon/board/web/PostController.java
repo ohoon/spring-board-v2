@@ -7,6 +7,8 @@ import com.ohoon.board.app.service.PostService;
 import com.ohoon.board.app.util.Mapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Slf4j
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -31,12 +34,16 @@ public class PostController {
     @GetMapping("")
     public String list(
             @CurrentMember CurrentMemberDto currentMember,
+            @RequestParam(required = false) String tab,
             @ModelAttribute("condition") PostSearchCondition condition,
             @PageableDefault(30) Pageable pageable,
             Model model
     ) {
-        Page<PostListDto> postListDtoPages = postService.list(condition, pageable);
+        Page<PostListDto> postListDtoPages = "best".equals(tab) ?
+                postService.listOfBest(condition, pageable) :
+                postService.list(condition, pageable);
         model.addAttribute("currentMember", currentMember);
+        model.addAttribute("tab", tab);
         model.addAttribute("listDtos", postListDtoPages.getContent());
         model.addAttribute("pageNumber", postListDtoPages.getNumber());
         model.addAttribute("totalPages", postListDtoPages.getTotalPages());

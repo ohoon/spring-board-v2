@@ -64,50 +64,53 @@
       </tr>
       </tbody>
     </table>
-    <div class="row">
-      <div class="col-1">
+    <div class="d-flex">
+      <div>
         <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post}'|">전체글</button>
+        <button class="btn btn-danger" type="button" th:onclick="|location.href='@{/post?tab=best}'|">추천글</button>
       </div>
-      <div class="col-5 m-auto">
-        <nav>
-          <ul class="pagination justify-content-center">
-            <li class="page-item" th:unless="${pageNumber < 10}">
-              <a class="page-link" th:if="${condition.keyword}"
-                 th:href="@{/post(page=${pageNumber - pageNumber % 10}, mode=${condition.mode}, keyword=${condition.keyword})}">
-                <span>&laquo;</span>
-              </a>
-              <a class="page-link" th:unless="${condition.keyword}"
-                 th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
-                <span>&laquo;</span>
-              </a>
-            </li>
-            <li th:each="page :
+      <div class="ms-auto">
+        <button class="btn btn-dark float-right" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
+      </div>
+    </div>
+    <div class="mx-auto">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:unless="${pageNumber < 10}">
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/post(page=${pageNumber - pageNumber % 10}, mode=${condition.mode}, keyword=${condition.keyword})}">
+              <span>&laquo;</span>
+            </a>
+            <a class="page-link" th:unless="${condition.keyword}"
+               th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
+              <span>&laquo;</span>
+            </a>
+          </li>
+          <li th:each="page :
              ${#numbers.sequence(
                 pageNumber - pageNumber % 10 + 1,
                 T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, T(java.lang.Math).max(totalPages, 1))
              )}"
-                th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
-              <a class="page-link" th:if="${condition.keyword}"
-                 th:href="@{/post(page=${page}, mode=${condition.mode}, keyword=${condition.keyword})}" th:text="${page}"></a>
-              <a class="page-link" th:unless="${condition.keyword}"
-                 th:href="@{/post(page=${page})}" th:text="${page}"></a>
-            </li>
-            <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
-              <a class="page-link" th:if="${condition.keyword}"
-                 th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11}, mode=${condition.mode}, keyword=${condition.keyword})}">
-                <span>&raquo;</span>
-              </a>
-              <a class="page-link" th:unless="${condition.keyword}"
-                 th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
-                <span>&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="col-1">
-        <button class="btn btn-dark float-right" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>
-      </div>
+              th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
+            <a class="page-link" th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+               th:href="@{/post(page=${page}, tab='best')}" th:text="${page}"></a>
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/post(page=${page}, mode=${condition.mode}, keyword=${condition.keyword})}" th:text="${page}"></a>
+            <a class="page-link" th:unless="${tab == 'best' || condition.keyword != null}"
+               th:href="@{/post(page=${page})}" th:text="${page}"></a>
+          </li>
+          <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11}, mode=${condition.mode}, keyword=${condition.keyword})}">
+              <span>&raquo;</span>
+            </a>
+            <a class="page-link" th:unless="${condition.keyword}"
+               th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
+              <span>&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
     <div class="row">
       <div class="col-5 m-auto">

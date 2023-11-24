@@ -50,6 +50,11 @@ public class PostService {
                 .map(mapper::toPostListDto);
     }
 
+    public Page<PostListDto> listOfBest(PostSearchCondition condition, Pageable pageable) {
+        return postRepository.listOfBest(condition, pageable)
+                .map(mapper::toPostListDto);
+    }
+
     public List<PostListDto> recentList() {
         return postRepository.findFirst6ByOrderByIdDesc().stream()
                 .map(mapper::toPostListDto)

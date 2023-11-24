@@ -40,7 +40,31 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         JPAQuery<Long> countQuery = queryFactory
                 .select(post.count())
                 .from(post)
-                .where(post.isRemoved.isFalse());
+                .where(searchFilter(condition)
+                        .and(post.isRemoved.isFalse()));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<Post> listOfBest(PostSearchCondition condition, Pageable pageable) {
+        List<Post> content = queryFactory
+                .selectFrom(post)
+                .leftJoin(post.member, member).fetchJoin()
+                .where(post.votes.size().goe(10)
+                        .and(searchFilter(condition))
+                        .and(post.isRemoved.isFalse()))
+                .orderBy(post.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(post.count())
+                .from(post)
+                .where(post.votes.size().goe(10)
+                        .and(searchFilter(condition))
+                        .and(post.isRemoved.isFalse()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }

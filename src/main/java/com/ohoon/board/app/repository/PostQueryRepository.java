@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface PostQueryRepository {
 
     Page<Post> list(PostSearchCondition condition, Pageable pageable);
+
+    Page<Post> listOfBest(PostSearchCondition condition, Pageable pageable);
 }
