@@ -7,8 +7,7 @@ import com.ohoon.board.app.service.PostService;
 import com.ohoon.board.app.util.Mapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Slf4j
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -39,9 +37,7 @@ public class PostController {
             @PageableDefault(30) Pageable pageable,
             Model model
     ) {
-        Page<PostListDto> postListDtoPages = "best".equals(tab) ?
-                postService.listOfBest(condition, pageable) :
-                postService.list(condition, pageable);
+        Page<PostListDto> postListDtoPages = postService.list(condition, pageable, tab);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("tab", tab);
         model.addAttribute("listDtos", postListDtoPages.getContent());
@@ -80,12 +76,16 @@ public class PostController {
     public String read(
             @CurrentMember CurrentMemberDto currentMember,
             @PathVariable("id") Long postId,
-            @PageableDefault(30) Pageable commentPageable,
+            @RequestParam(required = false) String tab,
+            @ModelAttribute("condition") PostSearchCondition condition,
+            @PageableDefault(30) @Qualifier Pageable pageable,
+            @PageableDefault(30) @Qualifier("comment") Pageable commentPageable,
             Model model
     ) {
         PostReadDto postReadDto = postService.read(postId);
         Page<CommentDto> commentDtoPages = commentService.listByPostId(postId, commentPageable);
         long totalComments = commentService.count(postId);
+        Page<PostListDto> postListDtoPages = postService.list(condition, pageable, tab);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("readDto", postReadDto);
         model.addAttribute("commentWriteDto", new CommentWriteDto());
@@ -93,6 +93,10 @@ public class PostController {
         model.addAttribute("commentPageNumber", commentDtoPages.getNumber());
         model.addAttribute("commentTotalPages", commentDtoPages.getTotalPages());
         model.addAttribute("totalComments", totalComments);
+        model.addAttribute("tab", tab);
+        model.addAttribute("listDtos", postListDtoPages.getContent());
+        model.addAttribute("pageNumber", postListDtoPages.getNumber());
+        model.addAttribute("totalPages", postListDtoPages.getTotalPages());
         return "posts/read";
     }
 
