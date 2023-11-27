@@ -39,6 +39,14 @@ public class MemberService {
         return savedMember.getId();
     }
 
+    @Transactional
+    public Long joinAdmin(MemberJoinDto memberJoinDto) {
+        Member savedMember = memberRepository.save(mapper.toAdminMember(memberJoinDto));
+        memberJoinDto.setPassword(passwordEncoder.encode(memberJoinDto.getPassword()));
+        authPasswordRepository.save(mapper.toAuthPassword(memberJoinDto, savedMember));
+        return savedMember.getId();
+    }
+
     public MemberProfileDto findById(Long memberId) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));

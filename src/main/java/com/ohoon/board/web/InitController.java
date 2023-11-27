@@ -40,6 +40,8 @@ public class InitController {
         private final CommentService commentService;
 
         public void init() {
+            memberService.joinAdmin(new MemberJoinDto("admin", "admin", "관리자", "0hoon5661@gmail.com"));
+
             List<Long> members = new ArrayList<>();
             for (int i = 1; i <= 100; i++) {
                 members.add(memberService.join(

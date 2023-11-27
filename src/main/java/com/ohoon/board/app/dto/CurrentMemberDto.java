@@ -1,10 +1,11 @@
 package com.ohoon.board.app.dto;
 
-import com.ohoon.board.domain.Member;
-import lombok.AccessLevel;
+import com.ohoon.board.domain.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,9 @@ public class CurrentMemberDto {
 
     private String memberName;
 
-    public static CurrentMemberDto create(Member member) {
-        return new CurrentMemberDto(
-                member.getId(),
-                member.getName());
+    private List<RoleType> roles;
+
+    public boolean isAdmin() {
+        return roles.contains(RoleType.ADMIN);
     }
 }

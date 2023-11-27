@@ -13,7 +13,10 @@ public class Mapper {
     public static CurrentMemberDto toCurrentMemberDto(Member member) {
         return new CurrentMemberDto(
                 member.getId(),
-                member.getName());
+                member.getName(),
+                member.getRoles().stream()
+                        .map(Role::getType)
+                        .toList());
     }
 
     public CommentDto toCommentDto(Comment comment) {
@@ -55,6 +58,15 @@ public class Mapper {
                 memberJoinDto.getUsername(),
                 memberJoinDto.getNickname(),
                 memberJoinDto.getEmail(),
+                Role.create(RoleType.MEMBER));
+    }
+
+    public Member toAdminMember(MemberJoinDto memberJoinDto) {
+        return Member.create(
+                memberJoinDto.getUsername(),
+                memberJoinDto.getNickname(),
+                memberJoinDto.getEmail(),
+                Role.create(RoleType.ADMIN),
                 Role.create(RoleType.MEMBER));
     }
 
