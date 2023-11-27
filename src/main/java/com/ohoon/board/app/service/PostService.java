@@ -86,6 +86,12 @@ public class PostService {
         return findPost.getMemberId().equals(memberId);
     }
 
+    public boolean isRemoved(Long postId) {
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
+        return findPost.isRemoved();
+    }
+
     @Transactional
     public void vote(Long memberId, Long postId) {
         Member findMember = memberRepository.findById(memberId)

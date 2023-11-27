@@ -72,6 +72,7 @@ public class PostController {
         return "redirect:/post";
     }
 
+    @PreAuthorize("!@postService.isRemoved(#postId)")
     @GetMapping("/{id}")
     public String read(
             @CurrentMember CurrentMemberDto currentMember,
