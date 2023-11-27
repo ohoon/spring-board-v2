@@ -67,12 +67,12 @@
           <small><strong th:text="${commentDto.author}"></strong></small>
         </div>
         <div class="col-8 ms-3" id="comment" style="cursor: pointer">
-          <span th:if="${commentDto.removed}"><small class="text-muted">(작성자에 의해 삭제된 댓글입니다)</small></span>
+          <span th:if="${commentDto.removed}"><small class="text-muted">(삭제된 댓글입니다.)</small></span>
           <span th:unless="${commentDto.removed}" th:text="${commentDto.content}"></span>
         </div>
         <div class="col">
           <div class="float-end">
-            <form th:if="${commentDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+            <form th:if="${currentMember != null && (currentMember.isAdmin() || commentDto.memberId == currentMember.memberId)}"
                   th:unless="${commentDto.removed}"
                   th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${commentDto.commentId})}|"
                   method="post" style="display: inline">
@@ -95,7 +95,7 @@
         </div>
         <div class="col">
           <div class="float-end">
-            <form th:if="${childrenDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+            <form th:if="${currentMember != null && (currentMember.isAdmin() || childrenDto.memberId == currentMember.memberId)}"
                   th:action="|@{/post/{postId}/comment/{commentId}/remove(postId=${readDto.postId}, commentId=${childrenDto.commentId})}|"
                   method="post" style="display: inline">
               <button class="btn-close" style="width: 1px;" type="submit"></button>
@@ -155,13 +155,13 @@
       <button class="btn btn-danger" type="button" th:onclick="|location.href='@{/post?tab=best}'|">추천글</button>
     </div>
     <div class="ms-auto">
-      <form th:action="|@{/post/{id}/remove(id=${readDto.postId})}|" method="post"
-            th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+      <form th:if="${currentMember != null && (currentMember.isAdmin() || readDto.memberId == currentMember.memberId)}"
+            th:action="|@{/post/{id}/remove(id=${readDto.postId})}|" method="post"
             style="display: inline">
         <button class="btn btn-danger" type="submit">글삭제</button>
       </form>
       <button class="btn btn-info" type="button"
-              th:if="${readDto.memberId == (currentMember == null ? null : currentMember.memberId)}"
+              th:if="${currentMember != null && readDto.memberId == currentMember.memberId}"
               th:onclick="|location.href='@{/post/{id}/edit(id=${readDto.postId})}'|">글수정
       </button>
       <button class="btn btn-dark" type="button" th:onclick="|location.href='@{/post/write}'|">글쓰기</button>

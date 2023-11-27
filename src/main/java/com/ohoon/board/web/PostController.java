@@ -133,7 +133,7 @@ public class PostController {
         return "redirect:/post/{id}";
     }
 
-    @PreAuthorize("@postService.isAuthor(#postId, #currentMember.memberId)")
+    @PreAuthorize("hasRole('ADMIN') || @postService.isAuthor(#postId, #currentMember.memberId)")
     @PostMapping("/{id}/remove")
     public String remove(
             @CurrentMember CurrentMemberDto currentMember,
@@ -193,7 +193,7 @@ public class PostController {
         return "redirect:/post/{id}";
     }
 
-    @PreAuthorize("@commentService.isAuthor(#commentId, #currentMember.memberId)")
+    @PreAuthorize("hasRole('ADMIN') || @commentService.isAuthor(#commentId, #currentMember.memberId)")
     @PostMapping("/{id}/comment/{cid}/remove")
     public String removeComment(
             @CurrentMember CurrentMemberDto currentMember,
