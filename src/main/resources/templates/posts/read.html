@@ -113,8 +113,16 @@
       <nav>
         <ul class="pagination justify-content-center">
           <li class="page-item" th:unless="${commentPageNumber < 10}">
-            <a class="page-link"
-               th:href="@{/post/{id}(id=${readDto.postId}, comment_page=${commentPageNumber - commentPageNumber % 10})}">
+            <a class="page-link" th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+               th:href="@{/post/{id}(id=${readDto.postId}, tab='best', page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10})}">
+              <span>&laquo;</span>
+            </a>
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/post/{id}(id=${readDto.postId}, mode=${condition.mode}, keyword=${condition.keyword}, page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10})}">
+              <span>&laquo;</span>
+            </a>
+            <a class="page-link" th:unless="${tab == 'best' || condition.keyword != null}"
+               th:href="@{/post/{id}(id=${readDto.postId}, page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10})}">
               <span>&laquo;</span>
             </a>
           </li>
@@ -131,8 +139,16 @@
                th:href="@{/post/{id}(id=${readDto.postId}, page=${pageNumber+1}, comment_page=${page})}" th:text="${page}"></a>
           </li>
           <li class="page-item" th:if="${commentPageNumber < (commentTotalPages - 1) - (commentTotalPages - 1) % 10}">
-            <a class="page-link"
-               th:href="@{/post/{id}(id=${readDto.postId}, comment_page=${commentPageNumber - commentPageNumber % 10 + 11})}">
+            <a class="page-link" th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+               th:href="@{/post/{id}(id=${readDto.postId}, tab='best', page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10 + 11})}">
+              <span>&raquo;</span>
+            </a>
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/post/{id}(id=${readDto.postId}, mode=${condition.mode}, keyword=${condition.keyword}, page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10 + 11})}">
+              <span>&raquo;</span>
+            </a>
+            <a class="page-link" th:unless="${tab == 'best' || condition.keyword != null}"
+               th:href="@{/post/{id}(id=${readDto.postId}, page=${pageNumber+1}, comment_page=${commentPageNumber - commentPageNumber % 10 + 11})}">
               <span>&raquo;</span>
             </a>
           </li>
@@ -234,11 +250,15 @@
     <nav>
       <ul class="pagination justify-content-center">
         <li class="page-item" th:unless="${pageNumber < 10}">
+          <a class="page-link" th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+             th:href="@{/post(page=${pageNumber - pageNumber % 10}, tab='best')}">
+            <span>&laquo;</span>
+          </a>
           <a class="page-link" th:if="${condition.keyword}"
              th:href="@{/post(page=${pageNumber - pageNumber % 10}, mode=${condition.mode}, keyword=${condition.keyword})}">
             <span>&laquo;</span>
           </a>
-          <a class="page-link" th:unless="${condition.keyword}"
+          <a class="page-link" th:unless="${tab == 'best' || condition.keyword != null}"
              th:href="@{/post(page=${pageNumber - pageNumber % 10})}">
             <span>&laquo;</span>
           </a>
@@ -257,11 +277,15 @@
              th:href="@{/post(page=${page})}" th:text="${page}"></a>
         </li>
         <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
+          <a class="page-link" th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+             th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11}, tab='best')}">
+            <span>&raquo;</span>
+          </a>
           <a class="page-link" th:if="${condition.keyword}"
              th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11}, mode=${condition.mode}, keyword=${condition.keyword})}">
             <span>&raquo;</span>
           </a>
-          <a class="page-link" th:unless="${condition.keyword}"
+          <a class="page-link" th:unless="${tab == 'best' || condition.keyword != null}"
              th:href="@{/post(page=${pageNumber - pageNumber % 10 + 11})}">
             <span>&raquo;</span>
           </a>
