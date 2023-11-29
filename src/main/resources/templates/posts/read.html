@@ -16,7 +16,7 @@
   }
 </style>
 <body>
-<nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+<nav th:replace="~{fragments/navbar :: navbar(currentMember=${currentMember})}"></nav>
 <div class="container">
   <div class="py-3 text-center">
     <h3>게시판</h3>

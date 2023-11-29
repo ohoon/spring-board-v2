@@ -7,7 +7,7 @@
   }
 </style>
 <body>
-<nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+<nav th:replace="~{fragments/navbar :: navbar(currentMember=${currentMember})}"></nav>
   <div class="container">
     <div class="row">
       <div class="col-4 ml-auto">

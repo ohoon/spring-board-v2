@@ -97,6 +97,16 @@ public class Mapper {
                 member.getLastModifiedDate());
     }
 
+    public MemberListDto toMemberListDto(Member member) {
+        return new MemberListDto(
+                member.getId(),
+                member.getUsername(),
+                member.getNickname(),
+                member.getEmail(),
+                String.join(", ", member.getRoles().stream()
+                        .map(Role::getSimpleType).toList()));
+    }
+
     public PostEditDto toPostEditDto(PostReadDto postReadDto) {
         return new PostEditDto(
                 postReadDto.getTitle(),

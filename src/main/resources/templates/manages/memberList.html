@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<style>
+  table {
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+  tr:hover {
+    cursor: pointer;
+  }
+</style>
+<body>
+  <nav th:replace="~{fragments/navbar :: navbar(currentMember=${currentMember})}"></nav>
+  <div class="container">
+    <div class="py-3 text-center">
+      <h3>회원 목록</h3>
+    </div>
+    <table class="table table-hover text-center">
+      <thead>
+      <tr>
+        <th scope="col" style="width: 10%">번호</th>
+        <th scope="col" style="width: 20%">아이디</th>
+        <th scope="col" style="width: 20%">닉네임</th>
+        <th scope="col" style="width: 35%">이메일</th>
+        <th scope="col" style="width: 15%">역할</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="listDto : ${listDtos}"
+          th:onclick="|location.href='@{/manage/member/{id}(id=${listDto.memberId})}'|"
+      >
+        <td><small th:text="${listDto.memberId}"></small></td>
+        <td><span th:text="${listDto.username}"></span></td>
+        <td><span th:text="${listDto.nickname}"></span></td>
+        <td><span th:text="${listDto.email}"></span></td>
+        <td><span th:text="${listDto.roles}"></span></td>
+      </tr>
+      <tr th:if="${listDtos.isEmpty()}">
+        <td colspan="5" class="text-center">회원이 없습니다.</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="mx-auto">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:unless="${pageNumber < 10}">
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/manage/member(page=${pageNumber - pageNumber % 10}, mode=${condition.mode}, keyword=${condition.keyword})}">
+              <span>&laquo;</span>
+            </a>
+            <a class="page-link" th:unless="${condition.keyword}"
+               th:href="@{/manage/member(page=${pageNumber - pageNumber % 10})}">
+              <span>&laquo;</span>
+            </a>
+          </li>
+          <li th:each="page :
+             ${#numbers.sequence(
+                pageNumber - pageNumber % 10 + 1,
+                T(java.lang.Math).min(pageNumber - pageNumber % 10 + 10, T(java.lang.Math).max(totalPages, 1))
+             )}"
+              th:class="${page == pageNumber + 1 ? 'page-item active' : 'page-item'}">
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/manage/member(page=${page}, mode=${condition.mode}, keyword=${condition.keyword})}" th:text="${page}"></a>
+            <a class="page-link" th:unless="${condition.keyword}"
+               th:href="@{/manage/member(page=${page})}" th:text="${page}"></a>
+          </li>
+          <li class="page-item" th:if="${pageNumber < (totalPages - 1) - (totalPages - 1) % 10}">
+            <a class="page-link" th:if="${condition.keyword}"
+               th:href="@{/manage/member(page=${pageNumber - pageNumber % 10 + 11}, mode=${condition.mode}, keyword=${condition.keyword})}">
+              <span>&raquo;</span>
+            </a>
+            <a class="page-link" th:unless="${condition.keyword}"
+               th:href="@{/manage/member(page=${pageNumber - pageNumber % 10 + 11})}">
+              <span>&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="col-5 m-auto">
+        <form action method="get" th:object="${condition}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <select class="form-control" th:field="*{mode}">
+                <option value="USERNAME" selected>아이디</option>
+                <option value="NICKNAME">닉네임</option>
+                <option value="EMAIL">이메일</option>
+              </select>
+            </div>
+            <input class="form-control" id="search" type="text" th:field="*{keyword}">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">검색</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}"></head>
 <body>
-  <nav th:replace="~{fragments/navbar :: navbar(memberName=${currentMember?.memberName})}"></nav>
+  <nav th:replace="~{fragments/navbar :: navbar(currentMember=${currentMember})}"></nav>
   <div class="container">
     <table class="table table-hover text-center">
       <thead>

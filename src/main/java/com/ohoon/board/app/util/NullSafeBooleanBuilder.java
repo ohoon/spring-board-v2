@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public class NullSafeBooleanBuilder {
 
-    public static BooleanBuilder nullSafeBooleanBuilder(Supplier<BooleanExpression> func) {
+    public static BooleanBuilder builder(Supplier<BooleanExpression> func) {
         try {
             return new BooleanBuilder(func.get());
         } catch (IllegalArgumentException | NullPointerException e) {

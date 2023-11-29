@@ -1,8 +1,6 @@
 package com.ohoon.board.app.service;
 
-import com.ohoon.board.app.dto.MemberJoinDto;
-import com.ohoon.board.app.dto.MemberModifyDto;
-import com.ohoon.board.app.dto.MemberProfileDto;
+import com.ohoon.board.app.dto.*;
 import com.ohoon.board.app.exception.MemberNotFoundException;
 import com.ohoon.board.app.repository.AuthPasswordRepository;
 import com.ohoon.board.app.repository.MemberRepository;
@@ -11,6 +9,8 @@ import com.ohoon.board.app.util.Mapper;
 import com.ohoon.board.domain.AuthPassword;
 import com.ohoon.board.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,11 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
         boolean isSocial = authSocialRepository.existsByMember(findMember);
         return mapper.toMemberProfileDto(findMember, isSocial);
+    }
+
+    public Page<MemberListDto> list(MemberSearchCondition condition, Pageable pageable) {
+        return memberRepository.list(condition, pageable)
+                .map(mapper::toMemberListDto);
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4" th:fragment="navbar(memberName)">
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4" th:fragment="navbar(currentMember)">
   <div class="container-fluid">
     <a class="navbar-brand" th:href="@{/}">MyBoard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,6 +13,14 @@
         <li class="nav-item active">
           <a class="nav-link" th:href="@{/post}">게시판</a>
         </li>
+        <li class="nav-item dropdown"
+            th:if="${currentMember?.isAdmin()}"
+        >
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">관리자 메뉴</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/manage/member}">회원 관리</a></li>
+          </ul>
+        </li>
       </ul>
       <form class="mx-3" th:action="@{/post}" method="get">
         <div class="input-group">
@@ -22,9 +30,11 @@
           </div>
         </div>
       </form>
-      <button th:if="${memberName == null}" th:onclick="|location.href='@{/login}'|" class="btn btn-dark">로그인</button>
-      <div th:unless="${memberName == null}" class="navbar-nav dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" th:text="${memberName}"></a>
+      <button th:if="${currentMember == null}" th:onclick="|location.href='@{/login}'|" class="btn btn-dark">로그인</button>
+      <div class="navbar-nav dropdown"
+           th:unless="${currentMember == null}"
+      >
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" th:text="${currentMember.memberName}"></a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" th:href="@{/member}">내 정보</a>
           <div class="dropdown-divider"></div>

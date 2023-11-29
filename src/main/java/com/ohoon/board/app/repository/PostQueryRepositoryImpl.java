@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.ohoon.board.app.util.NullSafeBooleanBuilder.nullSafeBooleanBuilder;
+import static com.ohoon.board.app.util.NullSafeBooleanBuilder.builder;
 import static com.ohoon.board.domain.QMember.*;
 import static com.ohoon.board.domain.QPost.*;
 import static org.springframework.util.StringUtils.hasText;
@@ -87,18 +87,18 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     private BooleanBuilder titleContains(String title) {
-        return nullSafeBooleanBuilder(() -> post.title.contains(hasText(title) ? title : null));
+        return builder(() -> post.title.contains(hasText(title) ? title : null));
     }
 
     private BooleanBuilder contentContains(String content) {
-        return nullSafeBooleanBuilder(() -> post.content.contains(hasText(content) ? content : null));
+        return builder(() -> post.content.contains(hasText(content) ? content : null));
     }
 
     private BooleanBuilder authorContains(String author) {
-        return nullSafeBooleanBuilder(() -> post.author.contains(hasText(author) ? author : null));
+        return builder(() -> post.author.contains(hasText(author) ? author : null));
     }
 
     private BooleanBuilder commentContains(String comment) {
-        return nullSafeBooleanBuilder(() -> post.comments.any().content.contains(hasText(comment) ? comment : null));
+        return builder(() -> post.comments.any().content.contains(hasText(comment) ? comment : null));
     }
 }

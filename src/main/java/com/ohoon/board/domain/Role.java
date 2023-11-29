@@ -36,6 +36,10 @@ public class Role extends BaseEntity {
         return type.toFullName();
     }
 
+    public String getSimpleType() {
+        return type.toString();
+    }
+
     public void assignMember(Member member) {
         this.member = member;
     }
