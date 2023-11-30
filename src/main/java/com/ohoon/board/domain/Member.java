@@ -65,9 +65,11 @@ public class Member extends BaseEntity {
         role.assignMember(this);
     }
 
-    public void modify(String nickname, String email) {
+    public void modify(String nickname, String email, List<String> roles) {
         this.nickname = nickname;
         this.email = email;
+        this.roles.clear();
+        roles.forEach(role -> addRole(Role.create(RoleType.valueOf(role))));
     }
 
     public void quit() {

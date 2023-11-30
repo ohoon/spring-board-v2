@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<style>
+  .fieldError {
+    border-color: #bd2130;
+  }
+  .errorMsg {
+    color: #bd2130;
+  }
+</style>
+<body>
+  <nav th:replace="~{fragments/navbar :: navbar(currentMember=${currentMember})}"></nav>
+  <div class="container">
+    <form action th:object="${modifyDto}" method="post">
+      <table class="table table-hover text-center">
+        <thead>
+          <tr>
+            <th scope="col" colspan="2">
+              <strong>회원 정보 수정</strong>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">
+              <strong>아이디</strong>
+            </th>
+            <td>
+              <input type="text" th:field="*{username}" class="form-control" readonly>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <strong>닉네임</strong>
+            </th>
+            <td>
+              <input type="text" th:field="*{nickname}" class="form-control" placeholder="닉네임을 입력하세요."
+                     th:class="${#fields.hasErrors('nickname')} ? 'form-control fieldError' : 'form-control'">
+              <p class="errorMsg" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">올바른 닉네임 형식이 아닙니다.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <strong>이메일</strong>
+            </th>
+            <td>
+              <input type="email" th:field="*{email}" class="form-control" placeholder="sample@example.org"
+                     th:class="${#fields.hasErrors('email')} ? 'form-control fieldError' : 'form-control'">
+              <p class="errorMsg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">올바른 이메일 형식이 아닙니다.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <strong>역할</strong>
+            </th>
+            <td style="text-align: left">
+              <div class="form-check form-check-inline">
+                <input type="checkbox" th:field="*{roles}" class="form-check-input" id="adminCheckbox" value="ADMIN">
+                <label class="form-check-label" for="adminCheckbox">관리자</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="checkbox" th:field="*{roles}" class="form-check-input" id="memberCheckbox" value="MEMBER">
+                <label class="form-check-label" for="memberCheckbox">회원</label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <strong>생성일</strong>
+            </th>
+            <td>
+              <input type="text" th:field="${modifyDto.createdDate}" class="form-control" readonly>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <strong>최종 수정일</strong>
+            </th>
+            <td>
+              <input type="text" th:field="${modifyDto.lastModifiedDate}" class="form-control" readonly>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col">
+          <div class="d-inline-flex float-end">
+            <button class="btn btn-dark" type="submit">작성</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </div>
+</body>
+</html>

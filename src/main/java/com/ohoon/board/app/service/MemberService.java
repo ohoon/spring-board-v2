@@ -63,7 +63,7 @@ public class MemberService {
     public void modify(Long memberId, MemberModifyDto modifyDto) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
-        findMember.modify(modifyDto.getNickname(), modifyDto.getEmail());
+        findMember.modify(modifyDto.getNickname(), modifyDto.getEmail(), modifyDto.getRoles());
     }
 
     @Transactional

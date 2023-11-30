@@ -81,6 +81,7 @@ public class Mapper {
                 memberProfileDto.getUsername(),
                 memberProfileDto.getNickname(),
                 memberProfileDto.getEmail(),
+                memberProfileDto.getRoles(),
                 memberProfileDto.getCreatedDate(),
                 memberProfileDto.getLastModifiedDate()
         );
@@ -93,6 +94,9 @@ public class Mapper {
                 member.getNickname(),
                 member.getEmail(),
                 isSocial,
+                member.getRoles().stream()
+                        .map(Role::getSimpleType)
+                        .toList(),
                 member.getCreatedDate(),
                 member.getLastModifiedDate());
     }
