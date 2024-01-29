@@ -33,6 +33,45 @@
       </tr>
       </thead>
       <tbody>
+      <tr th:each="noticeListDto : ${noticeListDtos}">
+        <td>
+          <strong>
+            <small th:text="공지"></small>
+          </strong>
+        </td>
+        <td style="text-align: left">
+          <strong>
+            <a th:if="${tab == 'best'}" th:unless="${condition.keyword}"
+               th:href="@{/post/{id}(id=${noticeListDto.postId}, tab='best', page=${pageNumber+1})}">
+              <span th:text="${noticeListDto.title}"></span>
+            </a>
+            <a th:if="${condition.keyword}"
+               th:href="|@{/post/{id}(id=${noticeListDto.postId}, mode=${condition.mode}, keyword=${condition.keyword}, page=${pageNumber+1})}|">
+              <span th:text="${noticeListDto.title}"></span>
+            </a>
+            <a th:unless="${tab == 'best' || condition.keyword != null}"
+               th:href="|@{/post/{id}(id=${noticeListDto.postId}, page=${pageNumber+1})}|">
+              <span th:text="${noticeListDto.title}"></span>
+            </a>
+          </strong>
+          <small th:if="${noticeListDto.totalComments > 0}"
+                 th:text="' [' + ${noticeListDto.totalComments} + '] '"
+                 class="text-muted"></small>
+        </td>
+        <td th:text="${noticeListDto.author}"></td>
+        <td>
+          <small th:if="${noticeListDto.createdDate.isAfter(noticeListDto.createdDate.now().minusDays(1))}"
+                 th:text="${#temporals.format(noticeListDto.createdDate, 'HH:mm')}"></small>
+          <small th:unless="${noticeListDto.createdDate.isAfter(noticeListDto.createdDate.now().minusDays(1))}"
+                 th:if="${noticeListDto.createdDate.year == noticeListDto.createdDate.now().year}"
+                 th:text="${#temporals.format(noticeListDto.createdDate, 'MM.dd')}"></small>
+          <small th:unless="${noticeListDto.createdDate.isAfter(noticeListDto.createdDate.now().minusDays(1)) ||
+           noticeListDto.createdDate.year == noticeListDto.createdDate.now().year}"
+                 th:text="${#temporals.format(noticeListDto.createdDate, 'yyyy/MM/dd')}"></small>
+        </td>
+        <td><small th:text="${noticeListDto.view}"></small></td>
+        <td><small th:text="${noticeListDto.totalVotes}"></small></td>
+      </tr>
       <tr th:each="listDto : ${listDtos}">
         <td>
           <small th:text="${listDto.postId}"></small>

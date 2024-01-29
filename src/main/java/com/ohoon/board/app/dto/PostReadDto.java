@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostReadDto {
 
+    private boolean isNotice;
+
     private Long postId;
 
     private Long memberId;

@@ -38,6 +38,8 @@ public class Post extends BaseEntity {
 
     private long view;
 
+    private boolean isNotice;
+
     private boolean isRemoved;
 
     @OneToMany(
@@ -53,24 +55,26 @@ public class Post extends BaseEntity {
     )
     private final List<Vote> votes = new ArrayList<>();
 
-    private Post(String title, String content, String author, Member member) {
+    private Post(String title, String content, String author, boolean isNotice, Member member) {
         this.title = title;
         this.content = content;
         this.author = author;
+        this.isNotice = isNotice;
         this.member = member;
     }
 
-    public static Post create(String title, String content, Member member) {
-        return new Post(title, content, member.getName(), member);
+    public static Post create(String title, String content, boolean isNotice, Member member) {
+        return new Post(title, content, member.getName(), isNotice, member);
     }
 
     public Long getMemberId() {
         return member.getId();
     }
 
-    public void edit(String title, String content) {
+    public void edit(String title, String content, boolean isNotice) {
         this.title = title;
         this.content = content;
+        this.isNotice = isNotice;
     }
 
     public void remove() {

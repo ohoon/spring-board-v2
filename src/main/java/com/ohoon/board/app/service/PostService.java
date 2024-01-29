@@ -66,11 +66,17 @@ public class PostService {
                 .toList();
     }
 
+    public List<PostListDto> noticeList() {
+        return postRepository.findByIsNoticeIsTrueAndIsRemovedIsFalseOrderByIdDesc().stream()
+                .map(mapper::toPostListDto)
+                .toList();
+    }
+
     @Transactional
     public void edit(Long postId, PostEditDto postEditDto) {
         Post findPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시글이 존재하지 않습니다."));
-        findPost.edit(postEditDto.getTitle(), postEditDto.getContent());
+        findPost.edit(postEditDto.getTitle(), postEditDto.getContent(), postEditDto.isNotice());
     }
 
     @Transactional

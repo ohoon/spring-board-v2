@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostQueryRepo
     Optional<Post> findByIdForUpdate(@Param("id") Long id);
 
     List<Post> findFirst6ByOrderByIdDesc();
+
+    List<Post> findByIsNoticeIsTrueAndIsRemovedIsFalseOrderByIdDesc();
 }

@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class PostWriteDto {
 
@@ -20,4 +19,11 @@ public class PostWriteDto {
 
     @NotEmpty(message = "내용을 입력해주세요.")
     private String content;
+
+    private boolean isNotice;
+
+    public PostWriteDto(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

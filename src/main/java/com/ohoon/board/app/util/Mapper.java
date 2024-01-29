@@ -114,7 +114,8 @@ public class Mapper {
     public PostEditDto toPostEditDto(PostReadDto postReadDto) {
         return new PostEditDto(
                 postReadDto.getTitle(),
-                postReadDto.getContent()
+                postReadDto.getContent(),
+                postReadDto.isNotice()
         );
     }
 
@@ -132,6 +133,7 @@ public class Mapper {
 
     public PostReadDto toPostReadDto(Post post) {
         return new PostReadDto(
+                post.isNotice(),
                 post.getId(),
                 post.getMemberId(),
                 post.getTitle(),
@@ -146,6 +148,7 @@ public class Mapper {
         return Post.create(
                 postWriteDto.getTitle(),
                 postWriteDto.getContent(),
+                postWriteDto.isNotice(),
                 member);
     }
 
